@@ -7,7 +7,7 @@ const sinon = require('sinon');
 describe('lib/origami-image-set-tools', () => {
 	let defaults;
 	let log;
-	let Oist;
+	let OrigamiImageSetTools;
 
 	beforeEach(() => {
 		defaults = sinon.spy(require('lodash/defaults'));
@@ -16,26 +16,26 @@ describe('lib/origami-image-set-tools', () => {
 		log = require('../mock/log.mock');
 		mockery.registerMock('log', log);
 
-		Oist = require('../../..');
+		OrigamiImageSetTools = require('../../..');
 	});
 
 	it('exports a function', () => {
-		assert.isFunction(Oist);
+		assert.isFunction(OrigamiImageSetTools);
 	});
 
 	it('has a `defaults` property', () => {
-		assert.isObject(Oist.defaults);
+		assert.isObject(OrigamiImageSetTools.defaults);
 	});
 
 	describe('.defaults', () => {
 
 		it('has a `log` property', () => {
-			assert.strictEqual(Oist.defaults.log, console);
+			assert.strictEqual(OrigamiImageSetTools.defaults.log, console);
 		});
 
 	});
 
-	describe('new Oist(options)', () => {
+	describe('new OrigamiImageSetTools(options)', () => {
 		let instance;
 		let options;
 
@@ -43,13 +43,13 @@ describe('lib/origami-image-set-tools', () => {
 			options = {
 				log: log
 			};
-			instance = new Oist(options);
+			instance = new OrigamiImageSetTools(options);
 		});
 
 		it('defaults the passed in options', () => {
 			assert.isObject(defaults.firstCall.args[0]);
 			assert.strictEqual(defaults.firstCall.args[1], options);
-			assert.strictEqual(defaults.firstCall.args[2], Oist.defaults);
+			assert.strictEqual(defaults.firstCall.args[2], OrigamiImageSetTools.defaults);
 		});
 
 		describe('instance', () => {
