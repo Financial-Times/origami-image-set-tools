@@ -43,22 +43,22 @@ This module exposes an `oist` command which doesn't do anything yet.
 This library makes use of [promises], and provides a wrapper around part of [S3] – familiarity is assumed in the rest of the API documentation. You'll also need to require the module with:
 
 ```js
-const Oist = require('@financial-times/origami-image-set-tools');
+const OrigamiImageSetTools = require('@financial-times/origami-image-set-tools');
 ```
 
-#### `new Oist( [options] )`
+#### `new OrigamiImageSetTools( [options] )`
 
 This function returns a new Origami Image Set Tools instance. You can configure the created tool set with [an options object](#options) if you need to override any defaults.
 
 ```js
-const oist = new Oist({
+const toolSet = new OrigamiImageSetTools({
     example: 'value'
 });
 ```
 
 #### Options
 
-The Origami Image Set Tools module can be configured with a variety of options, passed in as an object to the `Oist` function. The available options are as follows:
+The Origami Image Set Tools module can be configured with a variety of options, passed in as an object to the `OrigamiImageSetTools` function. The available options are as follows:
 
   - `log`: A console object used to output non-request logs. Defaults to the global `console` object
 
