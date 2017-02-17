@@ -159,6 +159,10 @@ describe('lib/origami-image-set-tools', () => {
 					});
 				});
 
+				it('logs that the manifest file is being built', () => {
+					assert.calledWithExactly(log.info, 'Building manifest file…');
+				});
+
 				it('returns a promise', () => {
 					assert.instanceOf(returnedPromise, Promise);
 				});
@@ -172,8 +176,39 @@ describe('lib/origami-image-set-tools', () => {
 					assert.calledWithExactly(fs.writeFile, `${options.baseDirectory}/imageset.json`, JSON.stringify(imageSetManifest, null, '\t'));
 				});
 
+				it('logs that the manifest file has been saved', () => {
+					assert.calledWithExactly(log.info, '✔︎ Manifest file saved');
+				});
+
 				it('resolves with `undefined`', () => {
 					assert.isUndefined(resolvedValue);
+				});
+
+				describe('when an error occurs', () => {
+					let buildError;
+					let rejectedError;
+
+					beforeEach(() => {
+						log.info.reset();
+						buildError = new Error('rejected');
+						instance.buildImageSetManifest = sinon.stub().rejects(buildError);
+						return returnedPromise = instance.buildImageSetManifestFile().catch(error => {
+							rejectedError = error;
+						});
+					});
+
+					it('does not log that the manifest file has been saved', () => {
+						assert.neverCalledWith(log.info, '✔︎ Manifest file saved');
+					});
+
+					it('logs that the manifest file could not be saved', () => {
+						assert.calledWithExactly(log.error, '✘ Manifest file could not be saved');
+					});
+
+					it('rejects with the error', () => {
+						assert.strictEqual(rejectedError, buildError);
+					});
+
 				});
 
 			});
