@@ -89,7 +89,7 @@ const toolSet = new OrigamiImageSetTools({
 
 #### `toolSet.buildImageSetManifest()`
 
-This function returns a promise which resolves with buildd image set manifest. This uses the `baseDirectory` and `sourceDirectory` [options](#options) to determine where to find images.
+This function returns a promise which resolves with a built image set manifest. This uses the `baseDirectory` and `sourceDirectory` [options](#options) to determine where to find images.
 
 The image manifest has the following format:
 
