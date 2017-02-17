@@ -36,7 +36,38 @@ npm install @financial-times/origami-image-set-tools
 
 ### Command-Line Interface
 
-This module exposes an `oist` command which doesn't do anything yet.
+This module exposes an `oist` command which can be used to manage image sets from the command line:
+
+```
+Usage: oist [options] [command]
+
+
+Commands:
+
+  build-manifest [options]   build an image set manifest file and save to "imageset.json"
+  *                          unrecognised commands will output this help page
+
+Options:
+
+  -h, --help     output usage information
+  -V, --version  output the version number
+```
+
+#### Build Manifest
+
+The `oist build-manifest` command creates a JSON manifest file detailing all of the images in the set. An `imageset.json` file will be created in the current working directory. The output JSON format is [documented here](#toolsetgenerateimagesetinfo).
+
+```
+Usage: oist build-manifest [options]
+
+build an image set manifest file and save to "imageset.json"
+
+Options:
+
+  -h, --help                    output usage information
+  -s, --source-directory <dir>  The directory to look for source images in
+```
+
 
 ### API Documentation
 
@@ -56,9 +87,9 @@ const toolSet = new OrigamiImageSetTools({
 });
 ```
 
-#### `toolSet.generateImageSetManifest()`
+#### `toolSet.buildImageSetManifest()`
 
-This function returns a promise which resolves with generated image set manifest. This uses the `baseDirectory` and `sourceDirectory` [options](#options) to determine where to find images.
+This function returns a promise which resolves with buildd image set manifest. This uses the `baseDirectory` and `sourceDirectory` [options](#options) to determine where to find images.
 
 The image manifest has the following format:
 
@@ -81,9 +112,9 @@ The image manifest has the following format:
 }
 ```
 
-#### `toolSet.generateImageSetManifestFile()`
+#### `toolSet.buildImageSetManifestFile()`
 
-This function returns a promise which generates image set information (using `generateImageSetManifest`) then saves it to a file as JSON.
+This function returns a promise which builds image set information (using `buildImageSetManifest`) then saves it to a file as JSON.
 
 This uses the `baseDirectory` and `sourceDirectory` [options](#options) to determine where to find images and where to save the file. The file will be created at `<baseDirectory>/imageset.json`.
 

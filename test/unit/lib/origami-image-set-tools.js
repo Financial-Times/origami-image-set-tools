@@ -75,11 +75,11 @@ describe('lib/origami-image-set-tools', () => {
 				assert.strictEqual(instance.log, instance.options.log);
 			});
 
-			it('has a `generateImageSetManifest` method', () => {
-				assert.isFunction(instance.generateImageSetManifest);
+			it('has a `buildImageSetManifest` method', () => {
+				assert.isFunction(instance.buildImageSetManifest);
 			});
 
-			describe('.generateImageSetManifest()', () => {
+			describe('.buildImageSetManifest()', () => {
 				let resolvedValue;
 				let returnedPromise;
 
@@ -95,7 +95,7 @@ describe('lib/origami-image-set-tools', () => {
 						'directory-1'
 					]);
 
-					return returnedPromise = instance.generateImageSetManifest().then(value => {
+					return returnedPromise = instance.buildImageSetManifest().then(value => {
 						resolvedValue = value;
 					});
 				});
@@ -139,11 +139,11 @@ describe('lib/origami-image-set-tools', () => {
 
 			});
 
-			it('has a `generateImageSetManifestFile` method', () => {
-				assert.isFunction(instance.generateImageSetManifestFile);
+			it('has a `buildImageSetManifestFile` method', () => {
+				assert.isFunction(instance.buildImageSetManifestFile);
 			});
 
-			describe('.generateImageSetManifestFile()', () => {
+			describe('.buildImageSetManifestFile()', () => {
 				let imageSetManifest;
 				let resolvedValue;
 				let returnedPromise;
@@ -152,9 +152,9 @@ describe('lib/origami-image-set-tools', () => {
 					imageSetManifest = {
 						isMockInfo: true
 					};
-					instance.generateImageSetManifest = sinon.stub().resolves(imageSetManifest);
+					instance.buildImageSetManifest = sinon.stub().resolves(imageSetManifest);
 
-					return returnedPromise = instance.generateImageSetManifestFile().then(value => {
+					return returnedPromise = instance.buildImageSetManifestFile().then(value => {
 						resolvedValue = value;
 					});
 				});
@@ -163,8 +163,8 @@ describe('lib/origami-image-set-tools', () => {
 					assert.instanceOf(returnedPromise, Promise);
 				});
 
-				it('generates an image set manifest', () => {
-					assert.calledOnce(instance.generateImageSetManifest);
+				it('builds an image set manifest', () => {
+					assert.calledOnce(instance.buildImageSetManifest);
 				});
 
 				it('saves the image set manifest to a file as JSON', () => {
