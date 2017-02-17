@@ -6,6 +6,7 @@ const sinon = require('sinon');
 
 describe('lib/origami-image-set-tools', () => {
 	let defaults;
+	let fs;
 	let log;
 	let OrigamiImageSetTools;
 
@@ -13,8 +14,10 @@ describe('lib/origami-image-set-tools', () => {
 		defaults = sinon.spy(require('lodash/defaults'));
 		mockery.registerMock('lodash/defaults', defaults);
 
+		fs = require('../mock/fs-promise.mock');
+		mockery.registerMock('fs-promise', fs);
+
 		log = require('../mock/log.mock');
-		mockery.registerMock('log', log);
 
 		OrigamiImageSetTools = require('../../..');
 	});
@@ -29,8 +32,16 @@ describe('lib/origami-image-set-tools', () => {
 
 	describe('.defaults', () => {
 
+		it('has a `baseDirectory` property', () => {
+			assert.strictEqual(OrigamiImageSetTools.defaults.baseDirectory, process.cwd());
+		});
+
 		it('has a `log` property', () => {
 			assert.strictEqual(OrigamiImageSetTools.defaults.log, console);
+		});
+
+		it('has a `sourceDirectory` property', () => {
+			assert.strictEqual(OrigamiImageSetTools.defaults.sourceDirectory, 'src');
 		});
 
 	});
@@ -41,7 +52,9 @@ describe('lib/origami-image-set-tools', () => {
 
 		beforeEach(() => {
 			options = {
-				log: log
+				baseDirectory: 'foo',
+				log: log,
+				sourceDirectory: 'bar'
 			};
 			instance = new OrigamiImageSetTools(options);
 		});
@@ -60,6 +73,109 @@ describe('lib/origami-image-set-tools', () => {
 
 			it('has a `log` property set to `options.log`', () => {
 				assert.strictEqual(instance.log, instance.options.log);
+			});
+
+			it('has a `buildImageSetManifest` method', () => {
+				assert.isFunction(instance.buildImageSetManifest);
+			});
+
+			describe('.buildImageSetManifest()', () => {
+				let resolvedValue;
+				let returnedPromise;
+
+				beforeEach(() => {
+
+					fs.readdir.resolves([
+						'.hidden-1',
+						'image-1.jpg',
+						'image-2.png',
+						'text-1.txt',
+						'image-3.svg',
+						'image-4.gif',
+						'directory-1'
+					]);
+
+					return returnedPromise = instance.buildImageSetManifest().then(value => {
+						resolvedValue = value;
+					});
+				});
+
+				it('returns a promise', () => {
+					assert.instanceOf(returnedPromise, Promise);
+				});
+
+				it('reads the configured source directory', () => {
+					assert.calledOnce(fs.readdir);
+					assert.calledWithExactly(fs.readdir, `${options.baseDirectory}/${options.sourceDirectory}`);
+				});
+
+				it('resolves with an object that contains the image names', () => {
+					assert.deepEqual(resolvedValue, {
+						sourceDirectory: options.sourceDirectory,
+						images: [
+							{
+								name: 'image-1',
+								extension: 'jpg',
+								path: `${options.sourceDirectory}/image-1.jpg`
+							},
+							{
+								name: 'image-2',
+								extension: 'png',
+								path: `${options.sourceDirectory}/image-2.png`
+							},
+							{
+								name: 'image-3',
+								extension: 'svg',
+								path: `${options.sourceDirectory}/image-3.svg`
+							},
+							{
+								name: 'image-4',
+								extension: 'gif',
+								path: `${options.sourceDirectory}/image-4.gif`
+							}
+						]
+					});
+				});
+
+			});
+
+			it('has a `buildImageSetManifestFile` method', () => {
+				assert.isFunction(instance.buildImageSetManifestFile);
+			});
+
+			describe('.buildImageSetManifestFile()', () => {
+				let imageSetManifest;
+				let resolvedValue;
+				let returnedPromise;
+
+				beforeEach(() => {
+					imageSetManifest = {
+						isMockInfo: true
+					};
+					instance.buildImageSetManifest = sinon.stub().resolves(imageSetManifest);
+
+					return returnedPromise = instance.buildImageSetManifestFile().then(value => {
+						resolvedValue = value;
+					});
+				});
+
+				it('returns a promise', () => {
+					assert.instanceOf(returnedPromise, Promise);
+				});
+
+				it('builds an image set manifest', () => {
+					assert.calledOnce(instance.buildImageSetManifest);
+				});
+
+				it('saves the image set manifest to a file as JSON', () => {
+					assert.calledOnce(fs.writeFile);
+					assert.calledWithExactly(fs.writeFile, `${options.baseDirectory}/imageset.json`, JSON.stringify(imageSetManifest, null, '\t'));
+				});
+
+				it('resolves with `undefined`', () => {
+					assert.isUndefined(resolvedValue);
+				});
+
 			});
 
 		});
