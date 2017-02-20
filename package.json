@@ -30,7 +30,9 @@
     "aws-sdk": "^2.14.0",
     "commander": "^2.9.0",
     "fs-promise": "^2.0.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "mime-types": "^2.1.14",
+    "semver": "^5.3.0"
   },
   "devDependencies": {
     "eslint": "^3.15.0",
