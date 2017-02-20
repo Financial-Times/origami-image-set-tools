@@ -118,13 +118,29 @@ This function returns a promise which builds image set information (using `build
 
 This uses the `baseDirectory` and `sourceDirectory` [options](#options) to determine where to find images and where to save the file. The file will be created at `<baseDirectory>/imageset.json`.
 
+#### `toolSet.publishToS3( bucket )`
+
+This function returns a promise which builds image set information (using `buildImageSetManifest`) then publishes each image to the given S3 bucket.
+
+This uses the `awsAccessKey` and `awsSecretKey` [options](#options) to gain access to the bucket – these should grant write access.
+
+The `scheme` and `version` options are also used to calculate where the images will be uploaded to. If `scheme` is set to `myscheme` and `version` is set to `v4.5.6`, then:
+
+```
+[LOCAL]/src/myimage.png === [S3]/myscheme/v4/myimage.png
+```
+
 #### Options
 
 The Origami Image Set Tools module can be configured with a variety of options, passed in as an object to the `OrigamiImageSetTools` function. The available options are as follows:
 
+  - `awsAccessKey`: The AWS Access Key ID to use when publishing images to S3. Required when using the `publishToS3` method. Defaults to `null`
+  - `awsSecretKey`: The AWS Secret Key to use when publishing images to S3. Required when using the `publishToS3` method. Defaults to `null`
   - `baseDirectory`: The base directory of the image set, where the manifest files sit. Image set JSON files will be created here. Defaults to the current working directory
   - `log`: A console object used to output non-request logs. Defaults to the global `console` object
+  - `scheme`: The custom scheme to use when publishing to S3. This will dictate the folder structure of the S3 bucket. Defaults to `"noscheme"`
   - `sourceDirectory`: The directory relative to `baseDirectory` where the actual image files are located. Defaults to `"src"`
+  - `version`: The version to use when publishing to S3. The major part of this version number will dictate the folder structure of the S3 bucket. Defaults to `"v0.0.0"`
 
 
 Contributing

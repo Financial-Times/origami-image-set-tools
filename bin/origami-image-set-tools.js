@@ -14,16 +14,10 @@ program
 		const toolSet = new OrigamiImageSetTools({
 			sourceDirectory: options.sourceDirectory
 		});
-		toolSet.log.info('Building manifest file…');
-		toolSet.buildImageSetManifestFile()
-			.then(() => {
-				toolSet.log.info('✔︎ Manifest file saved');
-			})
-			.catch(error => {
-				toolSet.log.error('✘ Manifest file could not be saved');
-				toolSet.log.error(error.stack);
-				process.exit(1);
-			});
+		toolSet.buildImageSetManifestFile().catch(error => {
+			toolSet.log.error(error.stack);
+			process.exit(1);
+		});
 	});
 
 // Output help for all unrecognised commands
