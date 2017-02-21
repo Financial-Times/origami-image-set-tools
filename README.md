@@ -66,6 +66,7 @@ Options:
 
   -h, --help                    output usage information
   -s, --source-directory <dir>  The directory to look for source images in
+  -l, --legacy                  Whether to output the legacy manifest format
 ```
 
 Options can also be set as environment variables:
@@ -142,11 +143,37 @@ The image manifest has the following format:
 }
 ```
 
+#### `toolSet.buildLegacyImageSetManifest()`
+
+This function returns a promise which resolves with a built legacy image set manifest. This is a stripped down version of the `buildImageSetManifest` method.
+
+The legacy image manifest has the following format:
+
+```js
+{
+    // A list of the found images
+    images: [
+
+        // The name of each image
+        {
+            name: 'myimage'
+        }
+
+    ]
+}
+```
+
 #### `toolSet.buildImageSetManifestFile()`
 
 This function returns a promise which builds image set information (using `buildImageSetManifest`) then saves it to a file as JSON.
 
 This uses the `baseDirectory` and `sourceDirectory` [options](#options) to determine where to find images and where to save the file. The file will be created at `<baseDirectory>/imageset.json`.
+
+#### `toolSet.buildLegacyImageSetManifestFile()`
+
+This function returns a promise which builds legacy image set information (using `buildLegacyImageSetManifest`) then saves it to a file as JSON.
+
+This uses the `baseDirectory` and `sourceDirectory` [options](#options) to determine where to find images and where to save the file. The file will be created at `<baseDirectory>/imageList.json`.
 
 #### `toolSet.publishToS3( bucket )`
 
