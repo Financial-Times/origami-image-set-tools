@@ -181,6 +181,62 @@ describe('lib/origami-image-set-tools', () => {
 
 			});
 
+			it('has a `buildLegacyImageSetManifest` method', () => {
+				assert.isFunction(instance.buildLegacyImageSetManifest);
+			});
+
+			describe('.buildLegacyImageSetManifest()', () => {
+				let imageSetManifest;
+				let resolvedValue;
+				let returnedPromise;
+
+				beforeEach(() => {
+
+					imageSetManifest = {
+						sourceDirectory: options.sourceDirectory,
+						images: [
+							{
+								name: 'image-1',
+								extension: 'jpg',
+								path: `${options.sourceDirectory}/image-1.jpg`
+							},
+							{
+								name: 'image-2',
+								extension: 'png',
+								path: `${options.sourceDirectory}/image-2.png`
+							}
+						]
+					};
+					instance.buildImageSetManifest = sinon.stub().resolves(imageSetManifest);
+
+					return returnedPromise = instance.buildLegacyImageSetManifest().then(value => {
+						resolvedValue = value;
+					});
+				});
+
+				it('returns a promise', () => {
+					assert.instanceOf(returnedPromise, Promise);
+				});
+
+				it('builds an image set manifest', () => {
+					assert.calledOnce(instance.buildImageSetManifest);
+				});
+
+				it('resolves with an object that contains the only the image names and no source directory', () => {
+					assert.deepEqual(resolvedValue, {
+						images: [
+							{
+								name: 'image-1'
+							},
+							{
+								name: 'image-2'
+							}
+						]
+					});
+				});
+
+			});
+
 			it('has a `buildImageSetManifestFile` method', () => {
 				assert.isFunction(instance.buildImageSetManifestFile);
 			});
@@ -245,6 +301,80 @@ describe('lib/origami-image-set-tools', () => {
 
 					it('logs that the manifest file could not be saved', () => {
 						assert.calledWithExactly(log.error, '✘ Manifest file could not be saved');
+					});
+
+					it('rejects with the error', () => {
+						assert.strictEqual(rejectedError, buildError);
+					});
+
+				});
+
+			});
+
+			it('has a `buildLegacyImageSetManifestFile` method', () => {
+				assert.isFunction(instance.buildLegacyImageSetManifestFile);
+			});
+
+			describe('.buildLegacyImageSetManifestFile()', () => {
+				let imageSetManifest;
+				let resolvedValue;
+				let returnedPromise;
+
+				beforeEach(() => {
+					imageSetManifest = {
+						isMockInfo: true
+					};
+					instance.buildLegacyImageSetManifest = sinon.stub().resolves(imageSetManifest);
+
+					return returnedPromise = instance.buildLegacyImageSetManifestFile().then(value => {
+						resolvedValue = value;
+					});
+				});
+
+				it('logs that the manifest file is being built', () => {
+					assert.calledWithExactly(log.info, 'Building legacy manifest file…');
+				});
+
+				it('returns a promise', () => {
+					assert.instanceOf(returnedPromise, Promise);
+				});
+
+				it('builds an image set manifest', () => {
+					assert.calledOnce(instance.buildLegacyImageSetManifest);
+				});
+
+				it('saves the image set manifest to a file as JSON', () => {
+					assert.calledOnce(fs.writeFile);
+					assert.calledWithExactly(fs.writeFile, `${options.baseDirectory}/imageList.json`, JSON.stringify(imageSetManifest, null, '\t'));
+				});
+
+				it('logs that the manifest file has been saved', () => {
+					assert.calledWithExactly(log.info, '✔︎ Legacy manifest file saved');
+				});
+
+				it('resolves with `undefined`', () => {
+					assert.isUndefined(resolvedValue);
+				});
+
+				describe('when an error occurs', () => {
+					let buildError;
+					let rejectedError;
+
+					beforeEach(() => {
+						log.info.reset();
+						buildError = new Error('rejected');
+						instance.buildLegacyImageSetManifest = sinon.stub().rejects(buildError);
+						return returnedPromise = instance.buildLegacyImageSetManifestFile().catch(error => {
+							rejectedError = error;
+						});
+					});
+
+					it('does not log that the manifest file has been saved', () => {
+						assert.neverCalledWith(log.info, '✔︎ Legacy manifest file saved');
+					});
+
+					it('logs that the manifest file could not be saved', () => {
+						assert.calledWithExactly(log.error, '✘ Legacy manifest file could not be saved');
 					});
 
 					it('rejects with the error', () => {

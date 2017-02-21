@@ -126,6 +126,49 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist build-manifest', () => {
 
 });
 
+describe('oist build-manifest --legacy', () => {
+	let sourceDirectory;
+
+	before(() => {
+		sourceDirectory = path.join(global.testDirectory, 'src');
+		fs.mkdirSync(sourceDirectory);
+		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
+		return global.cliCall([
+			'build-manifest',
+			'--legacy'
+		]);
+	});
+
+	after(() => {
+		fs.unlinkSync(path.join(sourceDirectory, 'example.png'));
+		fs.rmdirSync(sourceDirectory);
+	});
+
+	it('outputs a success message', () => {
+		assert.match(global.cliCall.lastResult.output, /building legacy manifest file/i);
+		assert.match(global.cliCall.lastResult.output, /legacy manifest file saved/i);
+	});
+
+	it('exits with a code of 0', () => {
+		assert.strictEqual(global.cliCall.lastResult.code, 0);
+	});
+
+	it('creates the legacy manifest file', () => {
+		const manifestPath = path.join(global.testDirectory, 'imageList.json');
+		const manifestContents = fs.readFileSync(manifestPath);
+		let manifestJson;
+		assert.doesNotThrow(() => manifestJson = JSON.parse(manifestContents));
+		assert.deepEqual(manifestJson, {
+			images: [
+				{
+					name: 'example'
+				}
+			]
+		});
+	});
+
+});
+
 describe('oist build-manifest --source-directory not-a-directory', () => {
 
 	before(() => {
