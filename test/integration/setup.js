@@ -1,5 +1,6 @@
 'use strict';
 
+const defaults = require('lodash/defaults');
 const fs = require('fs');
 const path = require('path');
 const spawn = require('child_process').spawn;
@@ -10,7 +11,7 @@ global.testDirectory = fs.mkdtempSync('/tmp/oist-integration');
 global.cliCall = cliCall;
 global.cliCall.lastResult = null;
 
-function cliCall(cliArguments) {
+function cliCall(cliArguments, environment = {}) {
 
 	const command = path.resolve(__dirname, '../../bin/origami-image-set-tools.js');
 	const result = {
@@ -23,7 +24,7 @@ function cliCall(cliArguments) {
 	return new Promise(resolve => {
 		const child = spawn(command, cliArguments || [], {
 			cwd: global.testDirectory,
-			env: process.env
+			env: defaults({}, environment, process.env)
 		});
 		child.stdout.on('data', data => {
 			result.stdout += data;

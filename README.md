@@ -68,6 +68,10 @@ Options:
   -s, --source-directory <dir>  The directory to look for source images in
 ```
 
+Options can also be set as environment variables:
+
+  - `--source-directory` can be set with `IMAGESET_SOURCE_DIRECTORY`
+
 
 ### API Documentation
 
