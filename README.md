@@ -68,6 +68,36 @@ Options:
   -s, --source-directory <dir>  The directory to look for source images in
 ```
 
+Options can also be set as environment variables:
+
+  - `--source-directory` can be set with `IMAGESET_SOURCE_DIRECTORY`
+
+#### Publish to S3
+
+```
+Usage: publish-s3 [options]
+
+publish the image set to an S3 bucket for use by the Image Service
+
+Options:
+
+  -h, --help                      output usage information
+  -a, --aws-access-key <key>      The AWS access key to use in authentication
+  -S, --aws-secret-key <key>      The AWS access key secret to use in authentication
+  -b, --bucket <bucket>           The name of the S3 bucket to publish to
+  -s, --source-directory <dir>    The directory to look for source images in
+  -c, --scheme <scheme>           The custom scheme to publish this image set under
+  -v, --scheme-version <version>  The version to publish this image set under
+```
+
+Options can also be set as environment variables:
+
+  - `--aws-access-key` can be set with `AWS_ACCESS_KEY`
+  - `--aws-secret-key` can be set with `AWS_SECRET_KEY`
+  - `--bucket` can be set with `AWS_BUCKET`
+  - `--source-directory` can be set with `IMAGESET_SOURCE_DIRECTORY`
+  - `--scheme` can be set with `IMAGESET_SCHEME`
+  - `--scheme-version` can be set with `IMAGESET_VERSION`
 
 ### API Documentation
 
@@ -146,12 +176,17 @@ The Origami Image Set Tools module can be configured with a variety of options, 
 Contributing
 ------------
 
-This module has a full suite of unit tests, and is verified with ESLint. You can use the following commands to check your code before opening a pull request.
+This module has a full suite of unit and integration tests, and is verified with ESLint. You can use the following commands to check your code before opening a pull request.
 
 ```sh
 make verify  # verify JavaScript code with ESLint
 make test    # run the unit tests and check coverage
 ```
+
+You'll need to provide `TEST_AWS_ACCESS_KEY` and `TEST_AWS_SECRET_KEY` environment variables in order to run integration tests. You may also provide a `TEST_AWS_BUCKET` variable to override the test bucket name.
+
+You can find the AWS keys in the Origami shared LastPass folder under "Imageset S3 Bucket credentials" – be sure to use the development/QA ones!
+
 
 Publishing
 ----------
