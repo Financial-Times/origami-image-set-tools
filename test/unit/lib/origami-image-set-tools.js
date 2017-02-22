@@ -154,6 +154,7 @@ describe('lib/origami-image-set-tools', () => {
 				it('resolves with an object that contains the image names', () => {
 					assert.deepEqual(resolvedValue, {
 						sourceDirectory: options.sourceDirectory,
+						scheme: options.scheme,
 						images: [
 							{
 								name: 'image-1',
@@ -194,6 +195,7 @@ describe('lib/origami-image-set-tools', () => {
 
 					imageSetManifest = {
 						sourceDirectory: options.sourceDirectory,
+						scheme: options.scheme,
 						images: [
 							{
 								name: 'image-1',

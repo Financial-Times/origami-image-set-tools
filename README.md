@@ -45,6 +45,7 @@ Usage: oist [options] [command]
 Commands:
 
   build-manifest [options]   build an image set manifest file and save to "imageset.json"
+  publish-s3 [options]       publish the image set to an S3 bucket for use by the Image Service
   *                          unrecognised commands will output this help page
 
 Options:
@@ -66,12 +67,14 @@ Options:
 
   -h, --help                    output usage information
   -s, --source-directory <dir>  The directory to look for source images in
+  -c, --scheme <scheme>         The custom scheme this image set should be published under
   -l, --legacy                  Whether to output the legacy manifest format
 ```
 
 Options can also be set as environment variables:
 
   - `--source-directory` can be set with `IMAGESET_SOURCE_DIRECTORY`
+  - `--scheme` can be set with `IMAGESET_SCHEME`
 
 #### Publish to S3
 
@@ -128,6 +131,10 @@ The image manifest has the following format:
 {
     // The directory the images were sourced from
     sourceDirectory: 'src',
+
+    // The custom scheme the images should be stored
+    // under in the Image Service
+    scheme: 'ftexample',
 
     // A list of the found images
     images: [
