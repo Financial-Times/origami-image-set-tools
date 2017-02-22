@@ -9,10 +9,12 @@ const program = require('commander');
 program
 	.command('build-manifest')
 	.option('-s, --source-directory <dir>', 'The directory to look for source images in', process.env.IMAGESET_SOURCE_DIRECTORY)
+	.option('-c, --scheme <scheme>', 'The custom scheme this image set should be published under', process.env.IMAGESET_SCHEME)
 	.option('-l, --legacy', 'Whether to output the legacy manifest format')
 	.description('build an image set manifest file and save to "imageset.json"')
 	.action(options => {
 		const toolSet = new OrigamiImageSetTools({
+			scheme: options.scheme,
 			sourceDirectory: options.sourceDirectory
 		});
 		const buildFunction = (options.legacy ? 'buildLegacyImageSetManifestFile' : 'buildImageSetManifestFile');
