@@ -191,7 +191,7 @@ This uses the `awsAccessKey` and `awsSecretKey` [options](#options) to gain acce
 The `scheme` and `version` options are also used to calculate where the images will be uploaded to. If `scheme` is set to `myscheme` and `version` is set to `v4.5.6`, then:
 
 ```
-[LOCAL]/src/myimage.png === [S3]/myscheme/v4/myimage.png
+[LOCAL]/src/myimage.png === [S3]/myscheme/v4/myimage
 ```
 
 #### Options

@@ -460,7 +460,7 @@ describe('lib/origami-image-set-tools', () => {
 				});
 
 				it('creates a read stream for each image', () => {
-					assert.calledThrice(fs.createReadStream);
+					assert.callCount(fs.createReadStream, 6);
 					assert.calledWithExactly(fs.createReadStream, path.resolve(options.baseDirectory, 'src/foo-image.png'));
 					assert.calledWithExactly(fs.createReadStream, path.resolve(options.baseDirectory, 'src/bar-image.jpg'));
 					assert.calledWithExactly(fs.createReadStream, path.resolve(options.baseDirectory, 'src/baz-image.svg'));
@@ -473,14 +473,26 @@ describe('lib/origami-image-set-tools', () => {
 					assert.calledWithExactly(mime.lookup, path.resolve(options.baseDirectory, 'src/baz-image.svg'));
 				});
 
-				it('creates an S3 upload for each image', () => {
-					assert.calledThrice(AWS.S3.mockInstance.upload);
-					assert.calledThrice(AWS.S3.mockUpload.promise);
+				it('creates two S3 uploads for each image, with and without an extension', () => {
+					assert.callCount(AWS.S3.mockInstance.upload, 6);
+					assert.callCount(AWS.S3.mockUpload.promise, 6);
+					assert.calledWith(AWS.S3.mockInstance.upload, {
+						ACL: 'public-read',
+						Body: fileStream,
+						ContentType: 'mock-mimetype',
+						Key: 'mock-scheme/v9/foo-image'
+					});
 					assert.calledWith(AWS.S3.mockInstance.upload, {
 						ACL: 'public-read',
 						Body: fileStream,
 						ContentType: 'mock-mimetype',
 						Key: 'mock-scheme/v9/foo-image.png'
+					});
+					assert.calledWith(AWS.S3.mockInstance.upload, {
+						ACL: 'public-read',
+						Body: fileStream,
+						ContentType: 'mock-mimetype',
+						Key: 'mock-scheme/v9/bar-image'
 					});
 					assert.calledWith(AWS.S3.mockInstance.upload, {
 						ACL: 'public-read',
@@ -492,13 +504,22 @@ describe('lib/origami-image-set-tools', () => {
 						ACL: 'public-read',
 						Body: fileStream,
 						ContentType: 'mock-mimetype',
+						Key: 'mock-scheme/v9/baz-image'
+					});
+					assert.calledWith(AWS.S3.mockInstance.upload, {
+						ACL: 'public-read',
+						Body: fileStream,
+						ContentType: 'mock-mimetype',
 						Key: 'mock-scheme/v9/baz-image.svg'
 					});
 				});
 
 				it('logs that each image has been published', () => {
+					assert.calledWithExactly(log.info, '✔︎ Published "src/foo-image.png" to S3 under "mock-scheme/v9/foo-image"');
 					assert.calledWithExactly(log.info, '✔︎ Published "src/foo-image.png" to S3 under "mock-scheme/v9/foo-image.png"');
+					assert.calledWithExactly(log.info, '✔︎ Published "src/bar-image.jpg" to S3 under "mock-scheme/v9/bar-image"');
 					assert.calledWithExactly(log.info, '✔︎ Published "src/bar-image.jpg" to S3 under "mock-scheme/v9/bar-image.jpg"');
+					assert.calledWithExactly(log.info, '✔︎ Published "src/baz-image.svg" to S3 under "mock-scheme/v9/baz-image"');
 					assert.calledWithExactly(log.info, '✔︎ Published "src/baz-image.svg" to S3 under "mock-scheme/v9/baz-image.svg"');
 				});
 
@@ -540,6 +561,7 @@ describe('lib/origami-image-set-tools', () => {
 					});
 
 					it('does not log that image file has been published', () => {
+						assert.neverCalledWith(log.info, '✔︎ Published "src/foo-image.png" to S3 under "mock-scheme/v9/foo-image"');
 						assert.neverCalledWith(log.info, '✔︎ Published "src/foo-image.png" to S3 under "mock-scheme/v9/foo-image.png"');
 					});
 
