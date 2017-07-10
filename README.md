@@ -46,6 +46,7 @@ Commands:
 
   build-manifest [options]   build an image set manifest file and save to "imageset.json"
   publish-s3 [options]       publish the image set to an S3 bucket for use by the Image Service
+  verify [options]           verify that images in the source directory are valid and have no issues
   *                          unrecognised commands will output this help page
 
 Options:
@@ -102,6 +103,25 @@ Options can also be set as environment variables:
   - `--source-directory` can be set with `IMAGESET_SOURCE_DIRECTORY`
   - `--scheme` can be set with `IMAGESET_SCHEME`
   - `--scheme-version` can be set with `IMAGESET_VERSION`
+
+#### Verify
+
+The `oist verify` command checks all of the images in the set to ensure that they're valid.
+
+```
+Usage: oist verify [options]
+
+  verify that images in the source directory are valid and have no issues
+
+  Options:
+
+    -h, --help                    output usage information
+    -s, --source-directory <dir>  The directory to look for source images in
+```
+
+Options can also be set as environment variables:
+
+  - `--source-directory` can be set with `IMAGESET_SOURCE_DIRECTORY`
 
 ### API Documentation
 
@@ -193,6 +213,12 @@ The `scheme` and `version` options are also used to calculate where the images w
 ```
 [LOCAL]/src/myimage.png === [S3]/myscheme/v4/myimage
 ```
+
+#### `toolSet.verifyImages()`
+
+This function returns a promise which verifies that each image in the set is valid.
+
+This uses the `baseDirectory` and `sourceDirectory` [options](#options) to determine where to find images. If any verification fails, this method will reject with an error that has a `verificationErrors` property.
 
 #### Options
 

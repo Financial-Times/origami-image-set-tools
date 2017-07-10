@@ -48,6 +48,23 @@ program
 		});
 	});
 
+// Command to lint images
+program
+	.command('verify')
+	.option('-s, --source-directory <dir>', 'The directory to look for source images in', process.env.IMAGESET_SOURCE_DIRECTORY)
+	.option('-c, --scheme <scheme>', 'The custom scheme to publish this image set under', process.env.IMAGESET_SCHEME)
+	.description('verify that images in the source directory are valid and have no issues')
+	.action(options => {
+		const toolSet = new OrigamiImageSetTools({
+			scheme: options.scheme,
+			sourceDirectory: options.sourceDirectory
+		});
+		toolSet.verifyImages().catch(error => {
+			toolSet.log.error(error.stack);
+			process.exit(1);
+		});
+	});
+
 // Output help for all unrecognised commands
 program
 	.command('*')

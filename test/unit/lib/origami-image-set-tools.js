@@ -13,6 +13,7 @@ describe('lib/origami-image-set-tools', () => {
 	let mime;
 	let OrigamiImageSetTools;
 	let semver;
+	let xml;
 
 	beforeEach(() => {
 		AWS = require('../mock/aws-sdk.mock');
@@ -31,6 +32,9 @@ describe('lib/origami-image-set-tools', () => {
 
 		semver = require('../mock/semver.mock');
 		mockery.registerMock('semver', semver);
+
+		xml = require('../mock/libxmljs.mock');
+		mockery.registerMock('libxmljs', xml);
 
 		OrigamiImageSetTools = require('../../..');
 	});
@@ -571,6 +575,185 @@ describe('lib/origami-image-set-tools', () => {
 
 					it('rejects with the error', () => {
 						assert.strictEqual(rejectedError, publishError);
+					});
+
+				});
+
+			});
+
+			it('has a `verifyImages` method', () => {
+				assert.isFunction(instance.verifyImages);
+			});
+
+			describe('.verifyImages()', () => {
+				let resolvedValue;
+				let returnedPromise;
+
+				beforeEach(() => {
+					instance.verifySvgImages = sinon.stub().resolves();
+					return returnedPromise = instance.verifyImages().then(value => {
+						resolvedValue = value;
+					});
+				});
+
+				it('returns a promise', () => {
+					assert.instanceOf(returnedPromise, Promise);
+				});
+
+				it('verifies SVG images', () => {
+					assert.calledOnce(instance.verifySvgImages);
+					assert.calledWithExactly(instance.verifySvgImages);
+				});
+
+				it('logs that images are being verified', () => {
+					assert.calledWithExactly(log.info, 'Verifying images…');
+				});
+
+				it('logs that images have been verified', () => {
+					assert.calledWithExactly(log.info, '✔︎ Verified all images');
+				});
+
+				it('resolves with `undefined`', () => {
+					assert.isUndefined(resolvedValue);
+				});
+
+			});
+
+			it('has a `verifySvgImages` method', () => {
+				assert.isFunction(instance.verifySvgImages);
+			});
+
+			describe('.verifySvgImages()', () => {
+				let imageSetManifest;
+				let resolvedValue;
+				let returnedPromise;
+
+				beforeEach(() => {
+
+					imageSetManifest = {
+						images: [
+							{
+								name: 'foo-image',
+								extension: 'png',
+								path: 'src/foo-image.png'
+							},
+							{
+								name: 'bar-image',
+								extension: 'svg',
+								path: 'src/bar-image.svg'
+							},
+							{
+								name: 'baz-image',
+								extension: 'svg',
+								path: 'src/baz-image.svg'
+							}
+						]
+					};
+					instance.buildImageSetManifest = sinon.stub().resolves(imageSetManifest);
+
+					fs.readFile.resolves('mock-svg-content');
+
+					return returnedPromise = instance.verifySvgImages().then(value => {
+						resolvedValue = value;
+					});
+				});
+
+				it('returns a promise', () => {
+					assert.instanceOf(returnedPromise, Promise);
+				});
+
+				it('logs that each image is being verified', () => {
+					assert.calledWithExactly(log.info, 'Verifying "src/bar-image.svg"…');
+					assert.calledWithExactly(log.info, 'Verifying "src/baz-image.svg"…');
+				});
+
+				it('reads each SVG image', () => {
+					assert.calledTwice(fs.readFile);
+					assert.calledWithExactly(fs.readFile, path.resolve(options.baseDirectory, 'src/bar-image.svg'), 'utf-8');
+					assert.calledWithExactly(fs.readFile, path.resolve(options.baseDirectory, 'src/baz-image.svg'), 'utf-8');
+				});
+
+				it('logs that each image has been verified', () => {
+					assert.calledWithExactly(log.info, '✔︎ File "src/bar-image.svg" has no issues');
+					assert.calledWithExactly(log.info, '✔︎ File "src/baz-image.svg" has no issues');
+				});
+
+				it('resolves with `undefined`', () => {
+					assert.isUndefined(resolvedValue);
+				});
+
+				describe('when the root SVG element has a width attribute', () => {
+					let rejectedError;
+
+					beforeEach(() => {
+						log.info.reset();
+						xml.mockRootNode.attr.withArgs('width').returns({});
+						return returnedPromise = instance.verifySvgImages().catch(error => {
+							rejectedError = error;
+						});
+					});
+
+					it('logs that the image did not pass verification', () => {
+						assert.calledWithExactly(log.error, '✘ File "src/bar-image.svg" has some issues:');
+						assert.calledWithExactly(log.error, '  - Root SVG element must not have a `width` attribute');
+					});
+
+					it('rejects with an error that has a `verificationErrors` property', () => {
+						assert.instanceOf(rejectedError, Error);
+						assert.isArray(rejectedError.verificationErrors);
+						assert.deepEqual(rejectedError.verificationErrors, [
+							'Root SVG element must not have a `width` attribute'
+						]);
+					});
+
+				});
+
+				describe('when the root SVG element has a height attribute', () => {
+					let rejectedError;
+
+					beforeEach(() => {
+						log.info.reset();
+						xml.mockRootNode.attr.withArgs('height').returns({});
+						return returnedPromise = instance.verifySvgImages().catch(error => {
+							rejectedError = error;
+						});
+					});
+
+					it('logs that the image did not pass verification', () => {
+						assert.calledWithExactly(log.error, '✘ File "src/bar-image.svg" has some issues:');
+						assert.calledWithExactly(log.error, '  - Root SVG element must not have a `height` attribute');
+					});
+
+					it('rejects with an error that has a `verificationErrors` property', () => {
+						assert.instanceOf(rejectedError, Error);
+						assert.isArray(rejectedError.verificationErrors);
+						assert.deepEqual(rejectedError.verificationErrors, [
+							'Root SVG element must not have a `height` attribute'
+						]);
+					});
+
+				});
+
+				describe('when the SVG cannot be parsed', () => {
+					let parseError;
+					let rejectedError;
+
+					beforeEach(() => {
+						log.info.reset();
+						parseError = new Error('parse error');
+						xml.parseXml.throws(parseError);
+						return returnedPromise = instance.verifySvgImages().catch(error => {
+							rejectedError = error;
+						});
+					});
+
+					it('logs that the image did not pass verification', () => {
+						assert.calledWithExactly(log.error, '✘ File "src/bar-image.svg" has some issues:');
+						assert.calledWithExactly(log.error, '  - parse error');
+					});
+
+					it('rejects with the error', () => {
+						assert.strictEqual(rejectedError, parseError);
 					});
 
 				});
