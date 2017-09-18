@@ -11,6 +11,7 @@ describe('lib/origami-image-set-tools', () => {
 	let fs;
 	let log;
 	let mime;
+	let request;
 	let OrigamiImageSetTools;
 	let semver;
 	let xml;
@@ -29,6 +30,9 @@ describe('lib/origami-image-set-tools', () => {
 
 		mime = require('../mock/mime-types.mock');
 		mockery.registerMock('mime-types', mime);
+
+		request = require('../mock/request-promise-native.mock');
+		mockery.registerMock('request-promise-native', request);
 
 		semver = require('../mock/semver.mock');
 		mockery.registerMock('semver', semver);
@@ -77,6 +81,14 @@ describe('lib/origami-image-set-tools', () => {
 			assert.strictEqual(OrigamiImageSetTools.defaults.version, 'v0.0.0');
 		});
 
+		it('has a `imageServiceApiKey` property', () => {
+			assert.strictEqual(OrigamiImageSetTools.defaults.imageServiceApiKey, null);
+		});
+
+		it('has a `imageServiceUrl` property', () => {
+			assert.strictEqual(OrigamiImageSetTools.defaults.imageServiceUrl, 'https://www.ft.com/__origami/service/image');
+		});
+
 	});
 
 	describe('new OrigamiImageSetTools(options)', () => {
@@ -88,6 +100,8 @@ describe('lib/origami-image-set-tools', () => {
 				awsAccessKey: 'mock-aws-key',
 				awsSecretKey: 'mock-aws-secret',
 				baseDirectory: 'mock-base-directory',
+				imageServiceApiKey: 'mock-image-service-api-key',
+				imageServiceUrl: 'mock-image-service-url',
 				log: log,
 				scheme: 'mock-scheme',
 				sourceDirectory: 'mock-source-directory',
@@ -575,6 +589,169 @@ describe('lib/origami-image-set-tools', () => {
 
 					it('rejects with the error', () => {
 						assert.strictEqual(rejectedError, publishError);
+					});
+
+				});
+
+			});
+
+			it('has a `purgeFromImageService` method', () => {
+				assert.isFunction(instance.purgeFromImageService);
+			});
+
+			describe('.purgeFromImageService()', () => {
+				let fileStream;
+				let imageSetManifest;
+				let resolvedValue;
+				let returnedPromise;
+
+				beforeEach(() => {
+					imageSetManifest = {
+						images: [
+							{
+								name: 'foo-image',
+								extension: 'png',
+								path: 'src/foo-image.png'
+							},
+							{
+								name: 'bar-image',
+								extension: 'jpg',
+								path: 'src/bar-image.jpg'
+							},
+							{
+								name: 'baz-image',
+								extension: 'svg',
+								path: 'src/baz-image.svg'
+							}
+						]
+					};
+					instance.buildImageSetManifest = sinon.stub().resolves(imageSetManifest);
+
+					mime.lookup.returns('mock-mimetype');
+
+					fileStream = {
+						isFileStream: true
+					};
+					fs.createReadStream.returns(fileStream);
+
+					semver.major.returns('9');
+
+					return returnedPromise = instance.purgeFromImageService().then(value => {
+						resolvedValue = value;
+					});
+				});
+
+				it('returns a promise', () => {
+					assert.instanceOf(returnedPromise, Promise);
+				});
+
+				it('builds an image set manifest', () => {
+					assert.calledOnce(instance.buildImageSetManifest);
+				});
+
+				it('logs that each image is being purged', () => {
+					assert.calledWithExactly(log.info, 'Scheduling "src/foo-image.png" to be purged');
+					assert.calledWithExactly(log.info, 'Scheduling "src/bar-image.jpg" to be purged');
+					assert.calledWithExactly(log.info, 'Scheduling "src/baz-image.svg" to be purged');
+				});
+
+				it('creates two purge requests for each image, with and without an extension', () => {
+					assert.callCount(request.get, 6);
+					assert.calledWith(request.get, {
+						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme/v9/foo-image',
+						headers: {
+							'ft-origami-api-key': options.imageServiceApiKey
+						}
+					});
+					assert.calledWith(request.get, {
+						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme/v9/foo-image.png',
+						headers: {
+							'ft-origami-api-key': options.imageServiceApiKey
+						}
+					});
+					assert.calledWith(request.get, {
+						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme/v9/bar-image',
+						headers: {
+							'ft-origami-api-key': options.imageServiceApiKey
+						}
+					});
+					assert.calledWith(request.get, {
+						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme/v9/bar-image.jpg',
+						headers: {
+							'ft-origami-api-key': options.imageServiceApiKey
+						}
+					});
+					assert.calledWith(request.get, {
+						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme/v9/baz-image',
+						headers: {
+							'ft-origami-api-key': options.imageServiceApiKey
+						}
+					});
+					assert.calledWith(request.get, {
+						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme/v9/baz-image.svg',
+						headers: {
+							'ft-origami-api-key': options.imageServiceApiKey
+						}
+					});
+				});
+
+				it('logs that each image has been published', () => {
+					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme/v9/foo-image" from "mock-image-service-url"' );
+					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme/v9/foo-image.png" from "mock-image-service-url"' );
+					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme/v9/bar-image" from "mock-image-service-url"' );
+					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme/v9/bar-image.jpg" from "mock-image-service-url"' );
+					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme/v9/baz-image" from "mock-image-service-url"' );
+					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme/v9/baz-image.svg" from "mock-image-service-url"');
+				});
+
+				it('resolves with `undefined`', () => {
+					assert.isUndefined(resolvedValue);
+				});
+
+				describe('when an Origmi Image Service API key is not provided in instantiation', () => {
+					let rejectedError;
+
+					beforeEach(() => {
+						log.info.reset();
+						delete options.imageServiceApiKey;
+						instance = new OrigamiImageSetTools(options);
+						return returnedPromise = instance.purgeFromImageService().catch(error => {
+							rejectedError = error;
+						});
+					});
+
+					it('rejects with an error', () => {
+						assert.instanceOf(rejectedError, Error);
+						assert.strictEqual(rejectedError.message, 'No Origami Image Service API key is available');
+					});
+
+				});
+
+				describe('when an error occurs', () => {
+					let purgeError;
+					let rejectedError;
+
+					beforeEach(() => {
+						log.info.reset();
+						imageSetManifest.images = [imageSetManifest.images[0]];
+						purgeError = new Error('rejected');
+						request.get.rejects(purgeError);
+						return returnedPromise = instance.purgeFromImageService().catch(error => {
+							rejectedError = error;
+						});
+					});
+
+					it('does not log that image file has been published', () => {
+						assert.neverCalledWith(log.info, '✔︎ Published "src/foo-image.png" to S3 under "mock-scheme/v9/foo-image"');
+						assert.neverCalledWith(log.info, '✔︎ Published "src/foo-image.png" to S3 under "mock-scheme/v9/foo-image.png"');
+					});
+
+					it('logs that the image file could not be published', () => {
+						assert.calledWithExactly(log.error, '✘ Could not schedule purge of "mock-scheme/v9/foo-image" "mock-scheme/v9/foo-image.png" from "mock-image-service-url"');
+					});
+
+					it('rejects with the error', () => {
+						assert.strictEqual(rejectedError, purgeError);
 					});
 
 				});

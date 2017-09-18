@@ -33,6 +33,7 @@
     "libxmljs": "^0.18.7",
     "lodash": "^4.17.4",
     "mime-types": "^2.1.14",
+    "request-promise-native": "^1.0.4",
     "semver": "^5.3.0"
   },
   "devDependencies": {
