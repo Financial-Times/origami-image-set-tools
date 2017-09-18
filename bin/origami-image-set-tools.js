@@ -48,6 +48,27 @@ program
 		});
 	});
 
+// Command to purge images from Origami Image Service
+program
+	.command('purge')
+	.option('-s, --source-directory <dir>', 'The directory to look for source images in', process.env.IMAGESET_SOURCE_DIRECTORY)
+	.option('-c, --scheme <scheme>', 'The custom scheme to purge this image set under', process.env.IMAGESET_SCHEME)
+	.option('-v, --scheme-version <version>', 'The version to publish this image set under', process.env.IMAGESET_VERSION)
+	.option('--image-service-api-key', 'The API key used to communicate with the Origami Image Service', process.env.IMAGE_SERVICE_API_KEY)
+	.description('request each image in the image set to be purged from the Origami Image Service')
+	.action(options => {
+		const toolSet = new OrigamiImageSetTools({
+			scheme: options.scheme,
+			sourceDirectory: options.sourceDirectory,
+			imageServiceApiKey: options.imageServiceApiKey,
+			version: options.schemeVersion
+		});
+		toolSet.purgeFromImageService().catch(error => {
+			toolSet.log.error(error.stack);
+			process.exit(1);
+		});
+	});
+
 // Command to lint images
 program
 	.command('verify')
