@@ -46,6 +46,7 @@ Commands:
 
   build-manifest [options]   build an image set manifest file and save to "imageset.json"
   publish-s3 [options]       publish the image set to an S3 bucket for use by the Image Service
+  purge [options]            request each image in the image set to be purged from the Origami Image Service
   verify [options]           verify that images in the source directory are valid and have no issues
   *                          unrecognised commands will output this help page
 
@@ -103,6 +104,25 @@ Options can also be set as environment variables:
   - `--source-directory` can be set with `IMAGESET_SOURCE_DIRECTORY`
   - `--scheme` can be set with `IMAGESET_SCHEME`
   - `--scheme-version` can be set with `IMAGESET_VERSION`
+
+#### Purging an image set
+
+The `oist purge` command will trigger a purge request for all images in the set.
+
+```
+Usage: purge [options]
+
+request each image in the image set to be purged from the Origami Image Service
+
+
+Options:
+
+  -s, --source-directory <dir>    The directory to look for source images in
+  -c, --scheme <scheme>           The custom scheme to purge this image set under
+  -v, --scheme-version <version>  The version to publish this image set under
+  --image-service-api-key <key>   The API key used to communicate with the Origami Image Service
+  -h, --help                      output usage information
+```
 
 #### Verify
 
