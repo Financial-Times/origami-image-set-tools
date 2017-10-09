@@ -82,7 +82,7 @@ describe('lib/origami-image-set-tools', () => {
 		});
 
 		it('has a `version` property', () => {
-			assert.strictEqual(OrigamiImageSetTools.defaults.version, '0');
+			assert.strictEqual(OrigamiImageSetTools.defaults.version, 'v0.0.0');
 		});
 
 		it('has a `imageServiceApiKey` property', () => {
@@ -958,8 +958,8 @@ describe('lib/origami-image-set-tools', () => {
 
 			describe('instance', () => {
 
-				it('has a `version` property set to "0"', () => {
-					assert.strictEqual(instance.version, '0');
+				it('has a `version` property set to "v0.0.0"', () => {
+					assert.strictEqual(instance.version, 'v0.0.0');
 				});
 
 			});
