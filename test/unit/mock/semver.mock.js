@@ -3,5 +3,6 @@
 const sinon = require('sinon');
 
 module.exports = {
-	clean: sinon.stub()
+	major: sinon.stub(),
+	valid: sinon.stub()
 };
