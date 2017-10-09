@@ -658,37 +658,37 @@ describe('lib/origami-image-set-tools', () => {
 				it('creates two purge requests for each image, with and without an extension', () => {
 					assert.callCount(request.get, 6);
 					assert.calledWith(request.get, {
-						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme/v9/foo-image',
+						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:foo-image?source=oist',
 						headers: {
 							'ft-origami-api-key': options.imageServiceApiKey
 						}
 					});
 					assert.calledWith(request.get, {
-						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme/v9/foo-image.png',
+						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:foo-image.png?source=oist',
 						headers: {
 							'ft-origami-api-key': options.imageServiceApiKey
 						}
 					});
 					assert.calledWith(request.get, {
-						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme/v9/bar-image',
+						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:bar-image?source=oist',
 						headers: {
 							'ft-origami-api-key': options.imageServiceApiKey
 						}
 					});
 					assert.calledWith(request.get, {
-						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme/v9/bar-image.jpg',
+						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:bar-image.jpg?source=oist',
 						headers: {
 							'ft-origami-api-key': options.imageServiceApiKey
 						}
 					});
 					assert.calledWith(request.get, {
-						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme/v9/baz-image',
+						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:baz-image?source=oist',
 						headers: {
 							'ft-origami-api-key': options.imageServiceApiKey
 						}
 					});
 					assert.calledWith(request.get, {
-						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme/v9/baz-image.svg',
+						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:baz-image.svg?source=oist',
 						headers: {
 							'ft-origami-api-key': options.imageServiceApiKey
 						}
@@ -696,12 +696,12 @@ describe('lib/origami-image-set-tools', () => {
 				});
 
 				it('logs that each image has been published', () => {
-					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme/v9/foo-image" from "mock-image-service-url"' );
-					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme/v9/foo-image.png" from "mock-image-service-url"' );
-					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme/v9/bar-image" from "mock-image-service-url"' );
-					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme/v9/bar-image.jpg" from "mock-image-service-url"' );
-					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme/v9/baz-image" from "mock-image-service-url"' );
-					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme/v9/baz-image.svg" from "mock-image-service-url"');
+					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme-v9:foo-image" from "mock-image-service-url"' );
+					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme-v9:foo-image.png" from "mock-image-service-url"' );
+					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme-v9:bar-image" from "mock-image-service-url"' );
+					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme-v9:bar-image.jpg" from "mock-image-service-url"' );
+					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme-v9:baz-image" from "mock-image-service-url"' );
+					assert.calledWithExactly(log.info, '✔︎ Scheduled purging of "mock-scheme-v9:baz-image.svg" from "mock-image-service-url"');
 				});
 
 				it('resolves with `undefined`', () => {
@@ -747,7 +747,7 @@ describe('lib/origami-image-set-tools', () => {
 					});
 
 					it('logs that the image file could not be published', () => {
-						assert.calledWithExactly(log.error, '✘ Could not schedule purge of "mock-scheme/v9/foo-image" "mock-scheme/v9/foo-image.png" from "mock-image-service-url"');
+						assert.calledWithExactly(log.error, '✘ Could not schedule purge of "mock-scheme-v9:foo-image" "mock-scheme-v9:foo-image.png" from "mock-image-service-url" using {"uri":"mock-image-service-url/v2/images/purge/mock-scheme-v9:foo-image?source=oist","headers":{"ft-origami-api-key":"mock-image-service-api-key"}}');
 					});
 
 					it('rejects with the error', () => {
