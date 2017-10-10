@@ -14,6 +14,7 @@ describe('lib/origami-image-set-tools', () => {
 	let request;
 	let OrigamiImageSetTools;
 	let semver;
+	let semvish;
 	let xml;
 
 	beforeEach(() => {
@@ -36,6 +37,9 @@ describe('lib/origami-image-set-tools', () => {
 
 		semver = require('../mock/semver.mock');
 		mockery.registerMock('semver', semver);
+
+		semvish = require('../mock/semvish.mock');
+		mockery.registerMock('semvish', semvish);
 
 		xml = require('../mock/libxmljs.mock');
 		mockery.registerMock('libxmljs', xml);
@@ -108,6 +112,7 @@ describe('lib/origami-image-set-tools', () => {
 				version: 'v1.2.3'
 			};
 			semver.valid.returns(true);
+			semvish.clean.returnsArg(0);
 			instance = new OrigamiImageSetTools(options);
 		});
 
@@ -115,6 +120,11 @@ describe('lib/origami-image-set-tools', () => {
 			assert.isObject(defaults.firstCall.args[0]);
 			assert.strictEqual(defaults.firstCall.args[1], options);
 			assert.strictEqual(defaults.firstCall.args[2], OrigamiImageSetTools.defaults);
+		});
+
+		it('cleans the passed in version', () => {
+			assert.isTrue(semvish.clean.called);
+			assert.strictEqual(semvish.clean.firstCall.args[0], options.version);
 		});
 
 		describe('instance', () => {
