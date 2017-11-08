@@ -1,0 +1,7 @@
+{
+	"checkPolicies": true,
+	"projectName": "origami-image-set-tools",
+	"productName": "origami-image-set-tools",
+	"devDep": false,
+	"failOnError": true
+}
