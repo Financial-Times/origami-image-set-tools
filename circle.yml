@@ -4,6 +4,7 @@ machine:
     version: 6
   post:
     - npm install -g npm@^5
+    - npm install node-pre-gyp
 
 test:
   override:
