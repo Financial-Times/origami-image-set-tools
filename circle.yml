@@ -4,6 +4,9 @@ machine:
     version: 6
   post:
     - npm install -g npm@^5
+
+dependencies:
+  pre:
     - npm install node-pre-gyp
 
 test:
