@@ -2,11 +2,12 @@
 machine:
   node:
     version: 6
+  post:
+    - npm install -g npm@^5
 
 test:
   override:
-    - make verify
-    - make test
+    - make ci
 
 deployment:
   release:
