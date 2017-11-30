@@ -1,0 +1,14 @@
+{
+	"description": "Tools for managing and uploading Origami image sets.",
+	"origamiType": null,
+	"origamiVersion": 1,
+	"keywords": [
+		"origami"
+	],
+	"support": "https://github.com/Financial-Times/origami-image-set-tools/issues",
+	"supportStatus": "active",
+	"supportContact": {
+		"email": "origami.support@ft.com",
+		"slack": "financialtimes/ft-origami"
+	}
+}
