@@ -525,6 +525,92 @@ describe('lib/origami-image-set-tools', () => {
 
 			});
 
+			it('has a `findUpdatedImages` method', () => {
+				assert.isFunction(instance.findUpdatedImages);
+			});
+
+			describe('.findUpdatedImages()', () => {
+				describe('when manifest has no images', () => {
+					it('returns an empty array', () => {
+						const imageSetManifest = {};
+						instance.readImageSetManifest = sinon.stub().resolves(imageSetManifest);
+
+						return instance.findUpdatedImages().then(result => {
+							assert.deepStrictEqual(result, []);
+						});
+					});
+				});
+				describe('when no images have been updated', () => {
+					it('returns an empty array', () => {
+						const imageSetManifest = {
+							images: [
+								{
+									name: 'foo-image',
+									extension: 'png',
+									path: 'src/foo-image.png',
+									previousHash: undefined
+								},
+								{
+									name: 'bar-image',
+									extension: 'jpg',
+									path: 'src/bar-image.jpg',
+									hash: 'a'
+								},
+								{
+									name: 'baz-image',
+									extension: 'svg',
+									path: 'src/baz-image.svg'
+								}
+							]
+						};
+						instance.readImageSetManifest = sinon.stub().resolves(imageSetManifest);
+
+						return instance.findUpdatedImages().then(result => {
+							assert.deepStrictEqual(result, []);
+						});
+					});
+				});
+
+				describe('when some images have been updated', () => {
+					it('returns an array containing only the updated images', () => {
+						const imageSetManifest = {
+							images: [
+								{
+									name: 'foo-image',
+									extension: 'png',
+									path: 'src/foo-image.png',
+									previousHash: 'a',
+									hash: 'a'
+								},
+								{
+									name: 'bar-image',
+									extension: 'jpg',
+									path: 'src/bar-image.jpg',
+									previousHash: 'b',
+									hash: 'c'
+								},
+								{
+									name: 'baz-image',
+									extension: 'svg',
+									path: 'src/baz-image.svg'
+								}
+							]
+						};
+						instance.readImageSetManifest = sinon.stub().resolves(imageSetManifest);
+
+						return instance.findUpdatedImages().then(result => {
+							assert.deepStrictEqual(result, [{
+								name: 'bar-image',
+								extension: 'jpg',
+								path: 'src/bar-image.jpg',
+								previousHash: 'b',
+								hash: 'c'
+							}]);
+						});
+					});
+				});
+			});
+
 			it('has a `publishToS3` method', () => {
 				assert.isFunction(instance.publishToS3);
 			});
@@ -726,8 +812,7 @@ describe('lib/origami-image-set-tools', () => {
 				let returnedPromise;
 
 				beforeEach(() => {
-					imageSetManifest = {
-						images: [
+					imageSetManifest = [
 							{
 								name: 'foo-image',
 								extension: 'png',
@@ -743,9 +828,8 @@ describe('lib/origami-image-set-tools', () => {
 								extension: 'svg',
 								path: 'src/baz-image.svg'
 							}
-						]
-					};
-					instance.buildImageSetManifest = sinon.stub().resolves(imageSetManifest);
+						];
+					instance.findUpdatedImages = sinon.stub().resolves(imageSetManifest);
 
 					mime.lookup.returns('mock-mimetype');
 
@@ -766,7 +850,7 @@ describe('lib/origami-image-set-tools', () => {
 				});
 
 				it('builds an image set manifest', () => {
-					assert.calledOnce(instance.buildImageSetManifest);
+					assert.calledOnce(instance.findUpdatedImages);
 				});
 
 				it('logs that each image is being purged', () => {
@@ -853,7 +937,7 @@ describe('lib/origami-image-set-tools', () => {
 
 					beforeEach(() => {
 						log.info.reset();
-						imageSetManifest.images = [imageSetManifest.images[0]];
+						imageSetManifest.images = [imageSetManifest[0]];
 						purgeError = new Error('rejected');
 						request.get.rejects(purgeError);
 						return returnedPromise = instance.purgeFromImageService().catch(error => {
