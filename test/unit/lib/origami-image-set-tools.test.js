@@ -9,6 +9,8 @@ describe('lib/origami-image-set-tools', () => {
 	let AWS;
 	let defaults;
 	let fs;
+	let fileExists;
+	let hasha;
 	let log;
 	let mime;
 	let request;
@@ -26,6 +28,12 @@ describe('lib/origami-image-set-tools', () => {
 
 		fs = require('../mock/fs-promise.mock');
 		mockery.registerMock('fs-promise', fs);
+
+		fileExists = require('../mock/file-exists.mock');
+		mockery.registerMock('file-exists', fileExists);
+
+		hasha = require('../mock/hasha.mock');
+		mockery.registerMock('hasha', hasha);
 
 		log = require('../mock/log.mock');
 
@@ -154,6 +162,7 @@ describe('lib/origami-image-set-tools', () => {
 				let returnedPromise;
 
 				beforeEach(() => {
+					hasha.fromFileSync.returns('a');
 
 					fs.readdir.resolves([
 						'.hidden-1',
@@ -187,27 +196,128 @@ describe('lib/origami-image-set-tools', () => {
 							{
 								name: 'image-1',
 								extension: 'jpg',
-								path: `${options.sourceDirectory}/image-1.jpg`
+								path: `${options.sourceDirectory}/image-1.jpg`,
+								hash: 'a',
+								previousHash: undefined
 							},
 							{
 								name: 'image-2',
 								extension: 'png',
-								path: `${options.sourceDirectory}/image-2.png`
+								path: `${options.sourceDirectory}/image-2.png`,
+								hash: 'a',
+								previousHash: undefined
 							},
 							{
 								name: 'image-3',
 								extension: 'svg',
-								path: `${options.sourceDirectory}/image-3.svg`
+								path: `${options.sourceDirectory}/image-3.svg`,
+								hash: 'a',
+								previousHash: undefined
 							},
 							{
 								name: 'image-4',
 								extension: 'gif',
-								path: `${options.sourceDirectory}/image-4.gif`
+								path: `${options.sourceDirectory}/image-4.gif`,
+								hash: 'a',
+								previousHash: undefined
 							}
 						]
 					});
 				});
 
+				describe('when a manifest already exists', () => {
+					let resolvedValue;
+
+					beforeEach(() => {
+						instance.readImageSetManifest = () => Promise.resolve({
+							sourceDirectory: options.sourceDirectory,
+							scheme: options.scheme,
+							images: [
+								{
+									name: 'image-1',
+									extension: 'jpg',
+									path: `${options.sourceDirectory}/image-1.jpg`,
+									hash: 'a',
+									previousHash: undefined
+								},
+								{
+									name: 'image-2',
+									extension: 'png',
+									path: `${options.sourceDirectory}/image-2.png`,
+									hash: 'a',
+									previousHash: undefined
+								},
+								{
+									name: 'image-3',
+									extension: 'svg',
+									path: `${options.sourceDirectory}/image-3.svg`,
+									hash: 'a',
+									previousHash: undefined
+								},
+								{
+									name: 'image-4',
+									extension: 'gif',
+									path: `${options.sourceDirectory}/image-4.gif`,
+									hash: 'a',
+									previousHash: undefined
+								}
+							]
+						});
+
+						hasha.fromFileSync.returns('b');
+
+						fs.readdir.resolves([
+							'.hidden-1',
+							'image-1.jpg',
+							'image-2.png',
+							'text-1.txt',
+							'image-3.svg',
+							'image-4.gif',
+							'directory-1'
+						]);
+
+						return instance.buildImageSetManifest().then(value => {
+							resolvedValue = value;
+						});
+					});
+
+					it('resolves with an object that contains the image names', () => {
+						assert.deepEqual(resolvedValue, {
+							sourceDirectory: options.sourceDirectory,
+							scheme: options.scheme,
+							images: [
+								{
+									name: 'image-1',
+									extension: 'jpg',
+									path: `${options.sourceDirectory}/image-1.jpg`,
+									hash: 'b',
+									previousHash: 'a'
+								},
+								{
+									name: 'image-2',
+									extension: 'png',
+									path: `${options.sourceDirectory}/image-2.png`,
+									hash: 'b',
+									previousHash: 'a'
+								},
+								{
+									name: 'image-3',
+									extension: 'svg',
+									path: `${options.sourceDirectory}/image-3.svg`,
+									hash: 'b',
+									previousHash: 'a'
+								},
+								{
+									name: 'image-4',
+									extension: 'gif',
+									path: `${options.sourceDirectory}/image-4.gif`,
+									hash: 'b',
+									previousHash: 'a'
+								}
+							]
+						});
+					});
+				});
 			});
 
 			it('has a `buildLegacyImageSetManifest` method', () => {
@@ -766,6 +876,90 @@ describe('lib/origami-image-set-tools', () => {
 
 				});
 
+			});
+
+			it('has a `readImageSetManifest` method', () => {
+				assert.isFunction(instance.readImageSetManifest);
+			});
+
+			describe('.readImageSetManifest()', () => {
+				describe('when no manifests exist', () => {
+					it('returns null', function () {
+						fileExists.resolves(false);
+						return instance.readImageSetManifest().then(result => {
+							assert.isNull(result);
+						});
+					});
+				});
+				describe('when only new manifest exists', () =>{
+					describe('is valid JSON', () => {
+						it('parses and returns the JSON string', function () {
+							fileExists.withArgs(`${options.baseDirectory}/imageset.json`).resolves(true);
+							fileExists.withArgs(`${options.baseDirectory}/imageList.json`).resolves(false);
+
+							fs.readFile.withArgs(`${options.baseDirectory}/imageset.json`, 'utf8').resolves('{"hello": "world"}');
+							return instance.readImageSetManifest().then(result => {
+								assert.deepStrictEqual(result, { hello: 'world' });
+							});
+						});
+					});
+					describe('is not valid JSON', () => {
+						it('throws an error', function () {
+							fileExists.withArgs(`${options.baseDirectory}/imageset.json`).resolves(true);
+							fileExists.withArgs(`${options.baseDirectory}/imageList.json`).resolves(false);
+							fs.readFile.withArgs(`${options.baseDirectory}/imageset.json`, 'utf8').resolves('qwertyuiop');
+							return instance.readImageSetManifest().catch(error => {
+								assert.instanceOf(error, Error);
+							});
+						});
+					});
+				});
+				describe('when only legacy manifest exists', () =>{
+					describe('is valid JSON', () => {
+						it('parses and returns the JSON string', function () {
+							fileExists.withArgs(`${options.baseDirectory}/imageset.json`).resolves(false);
+							fileExists.withArgs(`${options.baseDirectory}/imageList.json`).resolves(true);
+							fs.readFile.withArgs(`${options.baseDirectory}/imageList.json`, 'utf8').resolves('{"hello": "world"}');
+							return instance.readImageSetManifest().then(result => {
+								assert.deepStrictEqual(result, { hello: 'world' });
+							});
+						});
+					});
+					describe('is not valid JSON', () => {
+						it('throws an error', () => {
+							fileExists.withArgs(`${options.baseDirectory}/imageset.json`).resolves(false);
+							fileExists.withArgs(`${options.baseDirectory}/imageList.json`).resolves(true);
+							fs.readFile.withArgs(`${options.baseDirectory}/imageList.json`, 'utf8').resolves('qwertyuiop');
+							return instance.readImageSetManifest().catch(error => {
+								assert.instanceOf(error, Error);
+							});
+						});
+					});
+				});
+				describe('when both manifests exist', () =>{
+					describe('are valid JSON', () => {
+						it('parses and returns the JSON string for the new manifest file', () => {
+							fileExists.withArgs(`${options.baseDirectory}/imageset.json`).resolves(true);
+							fileExists.withArgs(`${options.baseDirectory}/imageList.json`).resolves(true);
+							fs.readFile.withArgs(`${options.baseDirectory}/imageset.json`, 'utf8').resolves('{"hello": "world"}');
+							fs.readFile.withArgs(`${options.baseDirectory}/imageList.json`, 'utf8').resolves('{"goodbye": "world"}');
+							return instance.readImageSetManifest().then(result => {
+								assert.deepStrictEqual(result, { hello: 'world' });
+							});
+						});
+					});
+					describe('are not valid JSON', () => {
+						it('throws an error',function () {
+							fileExists.withArgs(`${options.baseDirectory}/imageset.json`).resolves(true);
+							fileExists.withArgs(`${options.baseDirectory}/imageList.json`).resolves(true);
+							fs.readFile.withArgs(`${options.baseDirectory}/imageset.json`, 'utf8').resolves('qwertyuiop');
+							fs.readFile.withArgs(`${options.baseDirectory}/imageList.json`, 'utf8').resolves('asdfghjkl');
+							return instance.readImageSetManifest().catch(error => {
+								assert.instanceOf(error, Error);
+							});
+						});
+					});
+				});
 			});
 
 			it('has a `verifyImages` method', () => {
