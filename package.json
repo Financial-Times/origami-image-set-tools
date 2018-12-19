@@ -27,7 +27,7 @@
     "test": "make verify test"
   },
   "dependencies": {
-    "aws-sdk": "^2.134.0",
+    "aws-sdk": "^2.178.0",
     "commander": "^2.11.0",
     "file-exists": "^5.0.0",
     "fs-promise": "^2.0.3",
@@ -35,7 +35,7 @@
     "libxmljs": "^0.18.7",
     "lodash": "^4.17.4",
     "mime-types": "^2.1.17",
-    "request": "^2.83.0",
+    "request": "^2.84.0",
     "request-promise-native": "^1.0.5",
     "semver": "^5.4.1",
     "semvish": "^1.1.0"
