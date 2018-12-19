@@ -78,7 +78,7 @@ describe('lib/origami-image-set-tools', () => {
 		});
 
 		it('has a `log` property', () => {
-			assert.strictEqual(OrigamiImageSetTools.defaults.log, console);
+			assert.isObject(OrigamiImageSetTools.defaults.log);
 		});
 
 		it('has a `scheme` property', () => {

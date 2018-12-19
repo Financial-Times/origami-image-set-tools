@@ -28,7 +28,7 @@ jobs:
       - *restore_node_modules
       - run:
           name: Install dependencies
-          command: npm install
+          command: npm ci
       - *cache_node_modules
       - run:
           name: Run linters
