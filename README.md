@@ -28,7 +28,7 @@ Usage
 
 ### Requirements
 
-Running the Origami Set module requires [Node.js] 6.x and [npm]. You can install with:
+Running the Origami Set module requires [Node.js] 10.x and [npm]. You can install with:
 
 ```sh
 npm install @financial-times/origami-image-set-tools
