@@ -93,7 +93,8 @@ program
 	.action(command => {
 		// eslint-disable-next-line no-console
 		console.error(`Command "${command}" not found`);
-		program.help();
+		program.outputHelp();
+		process.exit(1);
 	});
 
 program
