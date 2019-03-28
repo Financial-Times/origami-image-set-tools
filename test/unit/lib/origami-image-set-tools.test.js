@@ -813,22 +813,22 @@ describe('lib/origami-image-set-tools', () => {
 
 				beforeEach(() => {
 					imageSetManifest = [
-							{
-								name: 'foo-image',
-								extension: 'png',
-								path: 'src/foo-image.png'
-							},
-							{
-								name: 'bar-image',
-								extension: 'jpg',
-								path: 'src/bar-image.jpg'
-							},
-							{
-								name: 'baz-image',
-								extension: 'svg',
-								path: 'src/baz-image.svg'
-							}
-						];
+						{
+							name: 'foo-image',
+							extension: 'png',
+							path: 'src/foo-image.png'
+						},
+						{
+							name: 'bar-image',
+							extension: 'jpg',
+							path: 'src/bar-image.jpg'
+						},
+						{
+							name: 'baz-image',
+							extension: 'svg',
+							path: 'src/baz-image.svg'
+						}
+					];
 					instance.findUpdatedImages = sinon.stub().resolves(imageSetManifest);
 
 					mime.lookup.returns('mock-mimetype');

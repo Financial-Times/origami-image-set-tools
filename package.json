@@ -24,7 +24,10 @@
     "origami-image-set-tools": "./bin/origami-image-set-tools.js"
   },
   "scripts": {
-    "test": "make verify test"
+    "test": "npm run test:lint && npm run test:unit && npm run test:integration",
+    "test:lint": "eslint .",
+    "test:integration": "mocha test/integration/**/*.test.js --recursive",
+    "test:unit": "nyc mocha test/unit/**/*.test.js --recursive"
   },
   "dependencies": {
     "aws-sdk": "^2.178.0",
