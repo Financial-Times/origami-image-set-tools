@@ -259,8 +259,7 @@ Contributing
 This module has a full suite of unit and integration tests, and is verified with ESLint. You can use the following commands to check your code before opening a pull request.
 
 ```sh
-make verify  # verify JavaScript code with ESLint
-make test    # run the unit tests and check coverage
+npm t
 ```
 
 You'll need to provide `TEST_AWS_ACCESS_KEY` and `TEST_AWS_SECRET_KEY` environment variables in order to run integration tests. You may also provide a `TEST_AWS_BUCKET` variable to override the test bucket name.
