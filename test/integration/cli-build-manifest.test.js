@@ -5,7 +5,6 @@ const fs = require('fs');
 const path = require('path');
 
 describe('oist build-manifest', function() {
-	this.timeout(30000);
 	let sourceDirectory;
 
 	before(function() {
