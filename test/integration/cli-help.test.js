@@ -45,7 +45,7 @@ describe('oist not-a-command', () => {
 	});
 
 	it('outputs an error', () => {
-		assert.strictEqual(global.cliCall.lastResult.output, 'Command "not-a-command" not found');
+		assert.include(global.cliCall.lastResult.output, 'Command "not-a-command" not found');
 	});
 
 	it('exits with a code of 1', () => {
