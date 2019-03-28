@@ -48,15 +48,16 @@ function createS3Instance() {
 
 // The actual tests
 
-describe('oist publish-s3 --aws-access-key XXXXX --aws-secret-key XXXXX --bucket origami-imageset-testing', () => {
+describe('oist publish-s3 --aws-access-key XXXXX --aws-secret-key XXXXX --bucket origami-imageset-testing', function() {
+	this.timeout(30000);
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
-		return clearBucket().then(() => {
+		return clearBucket().then(function() {
 			return global.cliCall([
 				'publish-s3',
 				'--aws-access-key', process.env.TEST_AWS_ACCESS_KEY,
@@ -66,14 +67,14 @@ describe('oist publish-s3 --aws-access-key XXXXX --aws-secret-key XXXXX --bucket
 		});
 	});
 
-	after(() => {
+	after(function() {
 		fs.unlinkSync(path.join(sourceDirectory, 'example1.png'));
 		fs.unlinkSync(path.join(sourceDirectory, 'example2.jpg'));
 		fs.rmdirSync(sourceDirectory);
 		return clearBucket();
 	});
 
-	it('outputs a success message', () => {
+	it('outputs a success message', function() {
 		assert.match(global.cliCall.lastResult.output, /publishing "src\/example1.png" to s3/i);
 		assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1"/i);
 		assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1.png"/i);
@@ -82,11 +83,11 @@ describe('oist publish-s3 --aws-access-key XXXXX --aws-secret-key XXXXX --bucket
 		assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2.jpg"/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
-	it('publishes the images to S3 under the expected keys', () => {
+	it('publishes the images to S3 under the expected keys', function() {
 		const s3 = createS3Instance();
 		return Promise.all([
 			s3.getObject({Key: 'noscheme/v0/example1'}).promise(),
@@ -107,15 +108,15 @@ describe('oist publish-s3 --aws-access-key XXXXX --aws-secret-key XXXXX --bucket
 
 });
 
-describe('AWS_ACCESS_KEY=XXXXX AWS_SECRET_KEY=XXXXX AWS_BUCKET=origami-imageset-testing oist publish-s3', () => {
+describe('AWS_ACCESS_KEY=XXXXX AWS_SECRET_KEY=XXXXX AWS_BUCKET=origami-imageset-testing oist publish-s3', function() {
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
-		return clearBucket().then(() => {
+		return clearBucket().then(function() {
 			return global.cliCall([
 				'publish-s3'
 			], {
@@ -126,14 +127,14 @@ describe('AWS_ACCESS_KEY=XXXXX AWS_SECRET_KEY=XXXXX AWS_BUCKET=origami-imageset-
 		});
 	});
 
-	after(() => {
+	after(function() {
 		fs.unlinkSync(path.join(sourceDirectory, 'example1.png'));
 		fs.unlinkSync(path.join(sourceDirectory, 'example2.jpg'));
 		fs.rmdirSync(sourceDirectory);
 		return clearBucket();
 	});
 
-	it('outputs a success message', () => {
+	it('outputs a success message', function() {
 		assert.match(global.cliCall.lastResult.output, /publishing "src\/example1.png" to s3/i);
 		assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1"/i);
 		assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1.png"/i);
@@ -142,11 +143,11 @@ describe('AWS_ACCESS_KEY=XXXXX AWS_SECRET_KEY=XXXXX AWS_BUCKET=origami-imageset-
 		assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2.jpg"/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
-	it('publishes the images to S3 under the expected keys', () => {
+	it('publishes the images to S3 under the expected keys', function() {
 		const s3 = createS3Instance();
 		return Promise.all([
 			s3.getObject({Key: 'noscheme/v0/example1'}).promise(),
@@ -167,15 +168,15 @@ describe('AWS_ACCESS_KEY=XXXXX AWS_SECRET_KEY=XXXXX AWS_BUCKET=origami-imageset-
 
 });
 
-describe('oist publish-s3 … --scheme test-scheme --scheme-version v4.5.6', () => {
+describe('oist publish-s3 … --scheme test-scheme --scheme-version v4.5.6', function() {
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
-		return clearBucket().then(() => {
+		return clearBucket().then(function() {
 			return global.cliCall([
 				'publish-s3',
 				'--aws-access-key', process.env.TEST_AWS_ACCESS_KEY,
@@ -187,14 +188,14 @@ describe('oist publish-s3 … --scheme test-scheme --scheme-version v4.5.6', () 
 		});
 	});
 
-	after(() => {
+	after(function() {
 		fs.unlinkSync(path.join(sourceDirectory, 'example1.png'));
 		fs.unlinkSync(path.join(sourceDirectory, 'example2.jpg'));
 		fs.rmdirSync(sourceDirectory);
 		return clearBucket();
 	});
 
-	it('outputs a success message', () => {
+	it('outputs a success message', function() {
 		assert.match(global.cliCall.lastResult.output, /publishing "src\/example1.png" to s3/i);
 		assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1"/i);
 		assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1.png"/i);
@@ -203,11 +204,11 @@ describe('oist publish-s3 … --scheme test-scheme --scheme-version v4.5.6', () 
 		assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2.jpg"/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
-	it('publishes the images to S3 under the expected keys', () => {
+	it('publishes the images to S3 under the expected keys', function() {
 		const s3 = createS3Instance();
 		return Promise.all([
 			s3.getObject({Key: 'test-scheme/v4/example1'}).promise(),
@@ -228,15 +229,15 @@ describe('oist publish-s3 … --scheme test-scheme --scheme-version v4.5.6', () 
 
 });
 
-describe('IMAGESET_SCHEME=test-scheme IMAGESET_VERSION=v4.5.6 … oist publish-s3', () => {
+describe('IMAGESET_SCHEME=test-scheme IMAGESET_VERSION=v4.5.6 … oist publish-s3', function() {
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
-		return clearBucket().then(() => {
+		return clearBucket().then(function() {
 			return global.cliCall([
 				'publish-s3'
 			], {
@@ -249,14 +250,14 @@ describe('IMAGESET_SCHEME=test-scheme IMAGESET_VERSION=v4.5.6 … oist publish-s
 		});
 	});
 
-	after(() => {
+	after(function() {
 		fs.unlinkSync(path.join(sourceDirectory, 'example1.png'));
 		fs.unlinkSync(path.join(sourceDirectory, 'example2.jpg'));
 		fs.rmdirSync(sourceDirectory);
 		return clearBucket();
 	});
 
-	it('outputs a success message', () => {
+	it('outputs a success message', function() {
 		assert.match(global.cliCall.lastResult.output, /publishing "src\/example1.png" to s3/i);
 		assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1"/i);
 		assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1.png"/i);
@@ -265,11 +266,11 @@ describe('IMAGESET_SCHEME=test-scheme IMAGESET_VERSION=v4.5.6 … oist publish-s
 		assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2.jpg"/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
-	it('publishes the images to S3 under the expected keys', () => {
+	it('publishes the images to S3 under the expected keys', function() {
 		const s3 = createS3Instance();
 		return Promise.all([
 			s3.getObject({Key: 'test-scheme/v4/example1'}).promise(),
@@ -290,15 +291,15 @@ describe('IMAGESET_SCHEME=test-scheme IMAGESET_VERSION=v4.5.6 … oist publish-s
 
 });
 
-describe('oist publish-s3 … --source-directory is-a-directory', () => {
+describe('oist publish-s3 … --source-directory is-a-directory', function() {
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'is-a-directory');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
-		return clearBucket().then(() => {
+		return clearBucket().then(function() {
 			return global.cliCall([
 				'publish-s3',
 				'--aws-access-key', process.env.TEST_AWS_ACCESS_KEY,
@@ -309,25 +310,25 @@ describe('oist publish-s3 … --source-directory is-a-directory', () => {
 		});
 	});
 
-	after(() => {
+	after(function() {
 		fs.unlinkSync(path.join(sourceDirectory, 'example1.png'));
 		fs.unlinkSync(path.join(sourceDirectory, 'example2.jpg'));
 		fs.rmdirSync(sourceDirectory);
 		return clearBucket();
 	});
 
-	it('outputs a success message', () => {
+	it('outputs a success message', function() {
 		assert.match(global.cliCall.lastResult.output, /publishing "is-a-directory\/example1.png" to s3/i);
 		assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example1.png" to s3 under "noscheme\/v0\/example1"/i);
 		assert.match(global.cliCall.lastResult.output, /publishing "is-a-directory\/example2.jpg" to s3/i);
 		assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example2.jpg" to s3 under "noscheme\/v0\/example2"/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
-	it('publishes the images to S3 under the expected keys', () => {
+	it('publishes the images to S3 under the expected keys', function() {
 		const s3 = createS3Instance();
 		return Promise.all([
 			s3.getObject({Key: 'noscheme/v0/example1'}).promise(),
@@ -348,15 +349,15 @@ describe('oist publish-s3 … --source-directory is-a-directory', () => {
 
 });
 
-describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory … oist publish-s3', () => {
+describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory … oist publish-s3', function() {
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'is-a-directory');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
-		return clearBucket().then(() => {
+		return clearBucket().then(function() {
 			return global.cliCall([
 				'publish-s3'
 			], {
@@ -368,25 +369,25 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory … oist publish-s3', () => {
 		});
 	});
 
-	after(() => {
+	after(function() {
 		fs.unlinkSync(path.join(sourceDirectory, 'example1.png'));
 		fs.unlinkSync(path.join(sourceDirectory, 'example2.jpg'));
 		fs.rmdirSync(sourceDirectory);
 		return clearBucket();
 	});
 
-	it('outputs a success message', () => {
+	it('outputs a success message', function() {
 		assert.match(global.cliCall.lastResult.output, /publishing "is-a-directory\/example1.png" to s3/i);
 		assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example1.png" to s3 under "noscheme\/v0\/example1"/i);
 		assert.match(global.cliCall.lastResult.output, /publishing "is-a-directory\/example2.jpg" to s3/i);
 		assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example2.jpg" to s3 under "noscheme\/v0\/example2"/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
-	it('publishes the images to S3 under the expected keys', () => {
+	it('publishes the images to S3 under the expected keys', function() {
 		const s3 = createS3Instance();
 		return Promise.all([
 			s3.getObject({Key: 'noscheme/v0/example1'}).promise(),
@@ -407,10 +408,10 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory … oist publish-s3', () => {
 
 });
 
-describe('oist publish-s3', () => {
+describe('oist publish-s3', function() {
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		return global.cliCall([
@@ -418,23 +419,23 @@ describe('oist publish-s3', () => {
 		]);
 	});
 
-	after(() => {
+	after(function() {
 		fs.rmdirSync(sourceDirectory);
 	});
 
-	it('outputs an error', () => {
+	it('outputs an error', function() {
 		assert.match(global.cliCall.lastResult.output, /No AWS credentials are available/i);
 	});
 
-	it('exits with a code of 1', () => {
+	it('exits with a code of 1', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 1);
 	});
 
 });
 
-describe('oist publish-s3 … --source-directory not-a-directory', () => {
+describe('oist publish-s3 … --source-directory not-a-directory', function() {
 
-	before(() => {
+	before(function() {
 		return global.cliCall([
 			'publish-s3',
 			'--aws-access-key', process.env.TEST_AWS_ACCESS_KEY,
@@ -444,11 +445,11 @@ describe('oist publish-s3 … --source-directory not-a-directory', () => {
 		]);
 	});
 
-	it('outputs an error', () => {
+	it('outputs an error', function() {
 		assert.match(global.cliCall.lastResult.output, /ENOENT: no such file or directory/i);
 	});
 
-	it('exits with a code of 1', () => {
+	it('exits with a code of 1', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 1);
 	});
 
