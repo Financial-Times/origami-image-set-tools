@@ -4,10 +4,10 @@ const assert = require('proclaim');
 const fs = require('fs');
 const path = require('path');
 
-describe('oist build-manifest', () => {
+describe('oist build-manifest', function() {
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
@@ -16,21 +16,21 @@ describe('oist build-manifest', () => {
 		]);
 	});
 
-	after(() => {
+	after(function() {
 		fs.unlinkSync(path.join(sourceDirectory, 'example.png'));
 		fs.rmdirSync(sourceDirectory);
 	});
 
-	it('outputs a success message', () => {
+	it('outputs a success message', function() {
 		assert.match(global.cliCall.lastResult.output, /building manifest file/i);
 		assert.match(global.cliCall.lastResult.output, /manifest file saved/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
-	it('creates the manifest file', () => {
+	it('creates the manifest file', function() {
 		const manifestPath = path.join(global.testDirectory, 'imageset.json');
 		const manifestContents = fs.readFileSync(manifestPath);
 		let manifestJson;
@@ -50,10 +50,10 @@ describe('oist build-manifest', () => {
 	});
 });
 
-describe('oist build-manifest --source-directory is-a-directory', () => {
+describe('oist build-manifest --source-directory is-a-directory', function() {
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'is-a-directory');
 		fs.mkdirSync(sourceDirectory);
 		return global.cliCall([
@@ -62,20 +62,20 @@ describe('oist build-manifest --source-directory is-a-directory', () => {
 		]);
 	});
 
-	after(() => {
+	after(function() {
 		fs.rmdirSync(sourceDirectory);
 	});
 
-	it('outputs a success message', () => {
+	it('outputs a success message', function() {
 		assert.match(global.cliCall.lastResult.output, /building manifest file/i);
 		assert.match(global.cliCall.lastResult.output, /manifest file saved/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
-	it('creates the manifest file', () => {
+	it('creates the manifest file', function() {
 		const manifestPath = path.join(global.testDirectory, 'imageset.json');
 		const manifestContents = fs.readFileSync(manifestPath);
 		let manifestJson;
@@ -89,10 +89,10 @@ describe('oist build-manifest --source-directory is-a-directory', () => {
 
 });
 
-describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist build-manifest', () => {
+describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist build-manifest', function() {
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'is-a-directory');
 		fs.mkdirSync(sourceDirectory);
 		return global.cliCall([
@@ -102,20 +102,20 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist build-manifest', () => {
 		});
 	});
 
-	after(() => {
+	after(function() {
 		fs.rmdirSync(sourceDirectory);
 	});
 
-	it('outputs a success message', () => {
+	it('outputs a success message', function() {
 		assert.match(global.cliCall.lastResult.output, /building manifest file/i);
 		assert.match(global.cliCall.lastResult.output, /manifest file saved/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
-	it('creates the manifest file', () => {
+	it('creates the manifest file', function() {
 		const manifestPath = path.join(global.testDirectory, 'imageset.json');
 		const manifestContents = fs.readFileSync(manifestPath);
 		let manifestJson;
@@ -129,10 +129,10 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist build-manifest', () => {
 
 });
 
-describe('oist build-manifest --scheme test-scheme', () => {
+describe('oist build-manifest --scheme test-scheme', function() {
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		return global.cliCall([
@@ -141,20 +141,20 @@ describe('oist build-manifest --scheme test-scheme', () => {
 		]);
 	});
 
-	after(() => {
+	after(function() {
 		fs.rmdirSync(sourceDirectory);
 	});
 
-	it('outputs a success message', () => {
+	it('outputs a success message', function() {
 		assert.match(global.cliCall.lastResult.output, /building manifest file/i);
 		assert.match(global.cliCall.lastResult.output, /manifest file saved/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
-	it('creates the manifest file', () => {
+	it('creates the manifest file', function() {
 		const manifestPath = path.join(global.testDirectory, 'imageset.json');
 		const manifestContents = fs.readFileSync(manifestPath);
 		let manifestJson;
@@ -168,10 +168,10 @@ describe('oist build-manifest --scheme test-scheme', () => {
 
 });
 
-describe('IMAGESET_SCHEME=test-scheme oist build-manifest', () => {
+describe('IMAGESET_SCHEME=test-scheme oist build-manifest', function() {
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		return global.cliCall([
@@ -181,20 +181,20 @@ describe('IMAGESET_SCHEME=test-scheme oist build-manifest', () => {
 		});
 	});
 
-	after(() => {
+	after(function() {
 		fs.rmdirSync(sourceDirectory);
 	});
 
-	it('outputs a success message', () => {
+	it('outputs a success message', function() {
 		assert.match(global.cliCall.lastResult.output, /building manifest file/i);
 		assert.match(global.cliCall.lastResult.output, /manifest file saved/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
-	it('creates the manifest file', () => {
+	it('creates the manifest file', function() {
 		const manifestPath = path.join(global.testDirectory, 'imageset.json');
 		const manifestContents = fs.readFileSync(manifestPath);
 		let manifestJson;
@@ -208,10 +208,10 @@ describe('IMAGESET_SCHEME=test-scheme oist build-manifest', () => {
 
 });
 
-describe('oist build-manifest --legacy', () => {
+describe('oist build-manifest --legacy', function() {
 	let sourceDirectory;
 
-	before(() => {
+	before(function() {
 		sourceDirectory = path.join(global.testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
@@ -221,21 +221,21 @@ describe('oist build-manifest --legacy', () => {
 		]);
 	});
 
-	after(() => {
+	after(function() {
 		fs.unlinkSync(path.join(sourceDirectory, 'example.png'));
 		fs.rmdirSync(sourceDirectory);
 	});
 
-	it('outputs a success message', () => {
+	it('outputs a success message', function() {
 		assert.match(global.cliCall.lastResult.output, /building legacy manifest file/i);
 		assert.match(global.cliCall.lastResult.output, /legacy manifest file saved/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
-	it('creates the legacy manifest file', () => {
+	it('creates the legacy manifest file', function() {
 		const manifestPath = path.join(global.testDirectory, 'imageList.json');
 		const manifestContents = fs.readFileSync(manifestPath);
 		let manifestJson;
@@ -251,21 +251,21 @@ describe('oist build-manifest --legacy', () => {
 
 });
 
-describe('oist build-manifest --source-directory not-a-directory', () => {
+describe('oist build-manifest --source-directory not-a-directory', function() {
 
-	before(() => {
+	before(function() {
 		return global.cliCall([
 			'build-manifest',
 			'--source-directory', 'not-a-directory'
 		]);
 	});
 
-	it('outputs an error', () => {
+	it('outputs an error', function() {
 		assert.match(global.cliCall.lastResult.output, /building manifest file/i);
 		assert.match(global.cliCall.lastResult.output, /manifest file could not be saved/i);
 	});
 
-	it('exits with a code of 1', () => {
+	it('exits with a code of 1', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 1);
 	});
 

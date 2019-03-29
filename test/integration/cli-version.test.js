@@ -2,19 +2,19 @@
 
 const assert = require('proclaim');
 
-describe('oist --version', () => {
+describe('oist --version', function() {
 
-	before(() => {
+	before(function() {
 		return global.cliCall([
 			'--version'
 		]);
 	});
 
-	it('outputs a version number', () => {
+	it('outputs a version number', function() {
 		assert.strictEqual(global.cliCall.lastResult.output, '0.0.0');
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 

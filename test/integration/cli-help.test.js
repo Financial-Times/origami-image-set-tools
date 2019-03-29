@@ -2,53 +2,53 @@
 
 const assert = require('proclaim');
 
-describe('oist', () => {
+describe('oist', function() {
 
-	before(() => {
+	before(function() {
 		return global.cliCall([]);
 	});
 
-	it('outputs help', () => {
+	it('outputs help', function() {
 		assert.match(global.cliCall.lastResult.output, /usage:/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
 });
 
-describe('oist --help', () => {
+describe('oist --help', function() {
 
-	before(() => {
+	before(function() {
 		return global.cliCall([
 			'--help'
 		]);
 	});
 
-	it('outputs help', () => {
+	it('outputs help', function() {
 		assert.match(global.cliCall.lastResult.output, /usage:/i);
 	});
 
-	it('exits with a code of 0', () => {
+	it('exits with a code of 0', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 0);
 	});
 
 });
 
-describe('oist not-a-command', () => {
+describe('oist not-a-command', function() {
 
-	before(() => {
+	before(function() {
 		return global.cliCall([
 			'not-a-command'
 		]);
 	});
 
-	it('outputs an error', () => {
-		assert.strictEqual(global.cliCall.lastResult.output, 'Command "not-a-command" not found');
+	it('outputs an error', function() {
+		assert.include(global.cliCall.lastResult.output, 'Command "not-a-command" not found');
 	});
 
-	it('exits with a code of 1', () => {
+	it('exits with a code of 1', function() {
 		assert.strictEqual(global.cliCall.lastResult.code, 1);
 	});
 

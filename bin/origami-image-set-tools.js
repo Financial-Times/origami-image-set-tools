@@ -91,7 +91,9 @@ program
 	.command('*')
 	.description('unrecognised commands will output this help page')
 	.action(command => {
+		// eslint-disable-next-line no-console
 		console.error(`Command "${command}" not found`);
+		program.outputHelp();
 		process.exit(1);
 	});
 
