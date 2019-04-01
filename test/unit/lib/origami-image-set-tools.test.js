@@ -664,7 +664,7 @@ describe('lib/origami-image-set-tools', function () {
 						}
 						]
 					};
-					instance.readImageSetManifest = sinon.stub().resolves(imageSetManifest);
+					instance.buildImageSetManifest = sinon.stub().resolves(imageSetManifest);
 
 					mime.lookup.returns('mock-mimetype');
 
@@ -696,8 +696,8 @@ describe('lib/origami-image-set-tools', function () {
 					});
 				});
 
-				it('reads an image set manifest', function () {
-					assert.calledOnce(instance.readImageSetManifest);
+				it('builds an image set manifest', function () {
+					assert.calledOnce(instance.buildImageSetManifest);
 				});
 
 				it('logs that each image is being published', function () {
