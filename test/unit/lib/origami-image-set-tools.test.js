@@ -206,38 +206,41 @@ describe('lib/origami-image-set-tools', function () {
 
 				it('resolves with an object that contains the image names', function () {
 					assert.deepEqual(resolvedValue, {
-						version: options.version,
-						host: options.host,
 						sourceDirectory: options.sourceDirectory,
 						scheme: options.scheme,
-						images: [{
-							name: 'image-1',
-							extension: 'jpg',
-							path: `${options.sourceDirectory}/image-1.jpg`,
-							hash: 'a',
-							previousHash: undefined
-						},
-						{
-							name: 'image-2',
-							extension: 'png',
-							path: `${options.sourceDirectory}/image-2.png`,
-							hash: 'a',
-							previousHash: undefined
-						},
-						{
-							name: 'image-3',
-							extension: 'svg',
-							path: `${options.sourceDirectory}/image-3.svg`,
-							hash: 'a',
-							previousHash: undefined
-						},
-						{
-							name: 'image-4',
-							extension: 'gif',
-							path: `${options.sourceDirectory}/image-4.gif`,
-							hash: 'a',
-							previousHash: undefined
-						}
+						images: [
+							{
+								name: 'image-1',
+								extension: 'jpg',
+								path: `${options.sourceDirectory}/image-1.jpg`,
+								hash: 'a',
+								url: 'https://origami.ft.com/mock-scheme/vundefined/image-1-a',
+								previousHash: undefined
+							},
+							{
+								name: 'image-2',
+								extension: 'png',
+								path: `${options.sourceDirectory}/image-2.png`,
+								hash: 'a',
+								url: 'https://origami.ft.com/mock-scheme/vundefined/image-2-a',
+								previousHash: undefined
+							},
+							{
+								name: 'image-3',
+								extension: 'svg',
+								path: `${options.sourceDirectory}/image-3.svg`,
+								hash: 'a',
+								url: 'https://origami.ft.com/mock-scheme/vundefined/image-3-a',
+								previousHash: undefined
+							},
+							{
+								name: 'image-4',
+								extension: 'gif',
+								path: `${options.sourceDirectory}/image-4.gif`,
+								hash: 'a',
+								url: 'https://origami.ft.com/mock-scheme/vundefined/image-4-a',
+								previousHash: undefined
+							}
 						]
 					});
 				});
@@ -247,8 +250,6 @@ describe('lib/origami-image-set-tools', function () {
 
 					beforeEach(function () {
 						instance.readImageSetManifest = () => Promise.resolve({
-							version: options.version,
-							host: options.host,
 							sourceDirectory: options.sourceDirectory,
 							scheme: options.scheme,
 							images: [{
@@ -301,8 +302,6 @@ describe('lib/origami-image-set-tools', function () {
 
 					it('resolves with an object that contains the image names', function () {
 						assert.deepEqual(resolvedValue, {
-							version: options.version,
-							host: options.host,
 							sourceDirectory: options.sourceDirectory,
 							scheme: options.scheme,
 							images: [{
@@ -310,28 +309,32 @@ describe('lib/origami-image-set-tools', function () {
 								extension: 'jpg',
 								path: `${options.sourceDirectory}/image-1.jpg`,
 								hash: 'b',
-								previousHash: 'a'
+								previousHash: 'a',
+								'url': 'https://origami.ft.com/mock-scheme/vundefined/image-1-b'
 							},
 							{
 								name: 'image-2',
 								extension: 'png',
 								path: `${options.sourceDirectory}/image-2.png`,
 								hash: 'b',
-								previousHash: 'a'
+								previousHash: 'a',
+								'url': 'https://origami.ft.com/mock-scheme/vundefined/image-2-b'
 							},
 							{
 								name: 'image-3',
 								extension: 'svg',
 								path: `${options.sourceDirectory}/image-3.svg`,
 								hash: 'b',
-								previousHash: 'a'
+								previousHash: 'a',
+								'url': 'https://origami.ft.com/mock-scheme/vundefined/image-3-b'
 							},
 							{
 								name: 'image-4',
 								extension: 'gif',
 								path: `${options.sourceDirectory}/image-4.gif`,
 								hash: 'b',
-								previousHash: 'a'
+								previousHash: 'a',
+								'url': 'https://origami.ft.com/mock-scheme/vundefined/image-4-b'
 							}
 							]
 						});
