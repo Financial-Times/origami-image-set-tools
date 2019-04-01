@@ -43,7 +43,8 @@ describe('oist build-manifest', function() {
 					name: 'example',
 					extension: 'png',
 					path: 'src/example.png',
-					hash: '923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda'
+					hash: '923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda',
+					url: 'https://www.ft.com/noscheme/v0/example-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda'
 				}
 			]
 		});

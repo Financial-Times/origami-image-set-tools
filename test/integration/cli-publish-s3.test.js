@@ -78,11 +78,11 @@ describe('oist publish-s3', function() {
 
 		it('outputs a success message', function() {
 			assert.match(global.cliCall.lastResult.output, /publishing "src\/example1.png" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1.png"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i);
 			assert.match(global.cliCall.lastResult.output, /publishing "src\/example2.jpg" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2.jpg"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg"/i);
 		});
 
 		it('exits with a code of 0', function() {
@@ -92,10 +92,10 @@ describe('oist publish-s3', function() {
 		it('publishes the images to S3 under the expected keys', function() {
 			const s3 = createS3Instance();
 			return Promise.all([
-				s3.getObject({Key: 'noscheme/v0/example1'}).promise(),
-				s3.getObject({Key: 'noscheme/v0/example1.png'}).promise(),
-				s3.getObject({Key: 'noscheme/v0/example2'}).promise(),
-				s3.getObject({Key: 'noscheme/v0/example2.jpg'}).promise()
+				s3.getObject({Key: 'noscheme/v0/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda'}).promise(),
+				s3.getObject({Key: 'noscheme/v0/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png'}).promise(),
+				s3.getObject({Key: 'noscheme/v0/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5'}).promise(),
+				s3.getObject({Key: 'noscheme/v0/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg'}).promise()
 			]).then(data => {
 				assert.strictEqual(data[0].ContentType, 'image/png');
 				assert.strictEqual(data[0].Body.toString(), 'not-really-a-png');
@@ -138,11 +138,11 @@ describe('oist publish-s3', function() {
 
 		it('outputs a success message', function() {
 			assert.match(global.cliCall.lastResult.output, /publishing "src\/example1.png" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1.png"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i);
 			assert.match(global.cliCall.lastResult.output, /publishing "src\/example2.jpg" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2.jpg"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg"/i);
 		});
 
 		it('exits with a code of 0', function() {
@@ -152,10 +152,10 @@ describe('oist publish-s3', function() {
 		it('publishes the images to S3 under the expected keys', function() {
 			const s3 = createS3Instance();
 			return Promise.all([
-				s3.getObject({Key: 'noscheme/v0/example1'}).promise(),
-				s3.getObject({Key: 'noscheme/v0/example1.png'}).promise(),
-				s3.getObject({Key: 'noscheme/v0/example2'}).promise(),
-				s3.getObject({Key: 'noscheme/v0/example2.jpg'}).promise()
+				s3.getObject({Key: 'noscheme/v0/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda'}).promise(),
+				s3.getObject({Key: 'noscheme/v0/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png'}).promise(),
+				s3.getObject({Key: 'noscheme/v0/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5'}).promise(),
+				s3.getObject({Key: 'noscheme/v0/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg'}).promise()
 			]).then(data => {
 				assert.strictEqual(data[0].ContentType, 'image/png');
 				assert.strictEqual(data[0].Body.toString(), 'not-really-a-png');
@@ -199,11 +199,11 @@ describe('oist publish-s3', function() {
 
 		it('outputs a success message', function() {
 			assert.match(global.cliCall.lastResult.output, /publishing "src\/example1.png" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1.png"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i);
 			assert.match(global.cliCall.lastResult.output, /publishing "src\/example2.jpg" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2.jpg"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg"/i);
 		});
 
 		it('exits with a code of 0', function() {
@@ -213,10 +213,10 @@ describe('oist publish-s3', function() {
 		it('publishes the images to S3 under the expected keys', function() {
 			const s3 = createS3Instance();
 			return Promise.all([
-				s3.getObject({Key: 'test-scheme/v4/example1'}).promise(),
-				s3.getObject({Key: 'test-scheme/v4/example1.png'}).promise(),
-				s3.getObject({Key: 'test-scheme/v4/example2'}).promise(),
-				s3.getObject({Key: 'test-scheme/v4/example2.jpg'}).promise()
+				s3.getObject({Key: 'test-scheme/v4/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda'}).promise(),
+				s3.getObject({Key: 'test-scheme/v4/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png'}).promise(),
+				s3.getObject({Key: 'test-scheme/v4/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5'}).promise(),
+				s3.getObject({Key: 'test-scheme/v4/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg'}).promise()
 			]).then(data => {
 				assert.strictEqual(data[0].ContentType, 'image/png');
 				assert.strictEqual(data[0].Body.toString(), 'not-really-a-png');
@@ -261,11 +261,11 @@ describe('oist publish-s3', function() {
 
 		it('outputs a success message', function() {
 			assert.match(global.cliCall.lastResult.output, /publishing "src\/example1.png" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1.png"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i);
 			assert.match(global.cliCall.lastResult.output, /publishing "src\/example2.jpg" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2.jpg"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i);
+			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg"/i);
 		});
 
 		it('exits with a code of 0', function() {
@@ -275,10 +275,10 @@ describe('oist publish-s3', function() {
 		it('publishes the images to S3 under the expected keys', function() {
 			const s3 = createS3Instance();
 			return Promise.all([
-				s3.getObject({Key: 'test-scheme/v4/example1'}).promise(),
-				s3.getObject({Key: 'test-scheme/v4/example1.png'}).promise(),
-				s3.getObject({Key: 'test-scheme/v4/example2'}).promise(),
-				s3.getObject({Key: 'test-scheme/v4/example2.jpg'}).promise()
+				s3.getObject({Key: 'test-scheme/v4/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda'}).promise(),
+				s3.getObject({Key: 'test-scheme/v4/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png'}).promise(),
+				s3.getObject({Key: 'test-scheme/v4/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5'}).promise(),
+				s3.getObject({Key: 'test-scheme/v4/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg'}).promise()
 			]).then(data => {
 				assert.strictEqual(data[0].ContentType, 'image/png');
 				assert.strictEqual(data[0].Body.toString(), 'not-really-a-png');
@@ -321,9 +321,9 @@ describe('oist publish-s3', function() {
 
 		it('outputs a success message', function() {
 			assert.match(global.cliCall.lastResult.output, /publishing "is-a-directory\/example1.png" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example1.png" to s3 under "noscheme\/v0\/example1"/i);
+			assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i);
 			assert.match(global.cliCall.lastResult.output, /publishing "is-a-directory\/example2.jpg" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example2.jpg" to s3 under "noscheme\/v0\/example2"/i);
+			assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i);
 		});
 
 		it('exits with a code of 0', function() {
@@ -333,10 +333,10 @@ describe('oist publish-s3', function() {
 		it('publishes the images to S3 under the expected keys', function() {
 			const s3 = createS3Instance();
 			return Promise.all([
-				s3.getObject({Key: 'noscheme/v0/example1'}).promise(),
-				s3.getObject({Key: 'noscheme/v0/example1.png'}).promise(),
-				s3.getObject({Key: 'noscheme/v0/example2'}).promise(),
-				s3.getObject({Key: 'noscheme/v0/example2.jpg'}).promise()
+				s3.getObject({Key: 'noscheme/v0/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda'}).promise(),
+				s3.getObject({Key: 'noscheme/v0/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png'}).promise(),
+				s3.getObject({Key: 'noscheme/v0/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5'}).promise(),
+				s3.getObject({Key: 'noscheme/v0/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg'}).promise()
 			]).then(data => {
 				assert.strictEqual(data[0].ContentType, 'image/png');
 				assert.strictEqual(data[0].Body.toString(), 'not-really-a-png');
@@ -380,9 +380,9 @@ describe('oist publish-s3', function() {
 
 		it('outputs a success message', function() {
 			assert.match(global.cliCall.lastResult.output, /publishing "is-a-directory\/example1.png" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example1.png" to s3 under "noscheme\/v0\/example1"/i);
+			assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i);
 			assert.match(global.cliCall.lastResult.output, /publishing "is-a-directory\/example2.jpg" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example2.jpg" to s3 under "noscheme\/v0\/example2"/i);
+			assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i);
 		});
 
 		it('exits with a code of 0', function() {
@@ -392,10 +392,10 @@ describe('oist publish-s3', function() {
 		it('publishes the images to S3 under the expected keys', function() {
 			const s3 = createS3Instance();
 			return Promise.all([
-				s3.getObject({Key: 'noscheme/v0/example1'}).promise(),
-				s3.getObject({Key: 'noscheme/v0/example1.png'}).promise(),
-				s3.getObject({Key: 'noscheme/v0/example2'}).promise(),
-				s3.getObject({Key: 'noscheme/v0/example2.jpg'}).promise()
+				s3.getObject({Key: 'noscheme/v0/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda'}).promise(),
+				s3.getObject({Key: 'noscheme/v0/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png'}).promise(),
+				s3.getObject({Key: 'noscheme/v0/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5'}).promise(),
+				s3.getObject({Key: 'noscheme/v0/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg'}).promise()
 			]).then(data => {
 				assert.strictEqual(data[0].ContentType, 'image/png');
 				assert.strictEqual(data[0].Body.toString(), 'not-really-a-png');

@@ -127,6 +127,7 @@ describe('lib/origami-image-set-tools', function () {
 				awsAccessKey: 'mock-aws-key',
 				awsSecretKey: 'mock-aws-secret',
 				baseDirectory: 'mock-base-directory',
+				host: 'https://origami.ft.com',
 				imageServiceApiKey: 'mock-image-service-api-key',
 				imageServiceUrl: 'mock-image-service-url',
 				log: log,
@@ -207,34 +208,39 @@ describe('lib/origami-image-set-tools', function () {
 					assert.deepEqual(resolvedValue, {
 						sourceDirectory: options.sourceDirectory,
 						scheme: options.scheme,
-						images: [{
-							name: 'image-1',
-							extension: 'jpg',
-							path: `${options.sourceDirectory}/image-1.jpg`,
-							hash: 'a',
-							previousHash: undefined
-						},
-						{
-							name: 'image-2',
-							extension: 'png',
-							path: `${options.sourceDirectory}/image-2.png`,
-							hash: 'a',
-							previousHash: undefined
-						},
-						{
-							name: 'image-3',
-							extension: 'svg',
-							path: `${options.sourceDirectory}/image-3.svg`,
-							hash: 'a',
-							previousHash: undefined
-						},
-						{
-							name: 'image-4',
-							extension: 'gif',
-							path: `${options.sourceDirectory}/image-4.gif`,
-							hash: 'a',
-							previousHash: undefined
-						}
+						images: [
+							{
+								name: 'image-1',
+								extension: 'jpg',
+								path: `${options.sourceDirectory}/image-1.jpg`,
+								hash: 'a',
+								url: 'https://origami.ft.com/mock-scheme/vundefined/image-1-a',
+								previousHash: undefined
+							},
+							{
+								name: 'image-2',
+								extension: 'png',
+								path: `${options.sourceDirectory}/image-2.png`,
+								hash: 'a',
+								url: 'https://origami.ft.com/mock-scheme/vundefined/image-2-a',
+								previousHash: undefined
+							},
+							{
+								name: 'image-3',
+								extension: 'svg',
+								path: `${options.sourceDirectory}/image-3.svg`,
+								hash: 'a',
+								url: 'https://origami.ft.com/mock-scheme/vundefined/image-3-a',
+								previousHash: undefined
+							},
+							{
+								name: 'image-4',
+								extension: 'gif',
+								path: `${options.sourceDirectory}/image-4.gif`,
+								hash: 'a',
+								url: 'https://origami.ft.com/mock-scheme/vundefined/image-4-a',
+								previousHash: undefined
+							}
 						]
 					});
 				});
@@ -303,28 +309,32 @@ describe('lib/origami-image-set-tools', function () {
 								extension: 'jpg',
 								path: `${options.sourceDirectory}/image-1.jpg`,
 								hash: 'b',
-								previousHash: 'a'
+								previousHash: 'a',
+								'url': 'https://origami.ft.com/mock-scheme/vundefined/image-1-b'
 							},
 							{
 								name: 'image-2',
 								extension: 'png',
 								path: `${options.sourceDirectory}/image-2.png`,
 								hash: 'b',
-								previousHash: 'a'
+								previousHash: 'a',
+								'url': 'https://origami.ft.com/mock-scheme/vundefined/image-2-b'
 							},
 							{
 								name: 'image-3',
 								extension: 'svg',
 								path: `${options.sourceDirectory}/image-3.svg`,
 								hash: 'b',
-								previousHash: 'a'
+								previousHash: 'a',
+								'url': 'https://origami.ft.com/mock-scheme/vundefined/image-3-b'
 							},
 							{
 								name: 'image-4',
 								extension: 'gif',
 								path: `${options.sourceDirectory}/image-4.gif`,
 								hash: 'b',
-								previousHash: 'a'
+								previousHash: 'a',
+								'url': 'https://origami.ft.com/mock-scheme/vundefined/image-4-b'
 							}
 							]
 						});
@@ -634,17 +644,23 @@ describe('lib/origami-image-set-tools', function () {
 						images: [{
 							name: 'foo-image',
 							extension: 'png',
-							path: 'src/foo-image.png'
+							path: 'src/foo-image.png',
+							previousHash: 'a',
+							hash: 'b'
 						},
 						{
 							name: 'bar-image',
 							extension: 'jpg',
-							path: 'src/bar-image.jpg'
+							path: 'src/bar-image.jpg',
+							previousHash: 'c',
+							hash: 'd'
 						},
 						{
 							name: 'baz-image',
 							extension: 'svg',
-							path: 'src/baz-image.svg'
+							path: 'src/baz-image.svg',
+							previousHash: 'e',
+							hash: 'f'
 						}
 						]
 					};
@@ -711,47 +727,47 @@ describe('lib/origami-image-set-tools', function () {
 						ACL: 'public-read',
 						Body: fileStream,
 						ContentType: 'mock-mimetype',
-						Key: 'mock-scheme/v9/foo-image'
+						Key: 'mock-scheme/v9/foo-image-b'
 					});
 					assert.calledWith(AWS.S3.mockInstance.upload, {
 						ACL: 'public-read',
 						Body: fileStream,
 						ContentType: 'mock-mimetype',
-						Key: 'mock-scheme/v9/foo-image.png'
+						Key: 'mock-scheme/v9/foo-image-b.png'
 					});
 					assert.calledWith(AWS.S3.mockInstance.upload, {
 						ACL: 'public-read',
 						Body: fileStream,
 						ContentType: 'mock-mimetype',
-						Key: 'mock-scheme/v9/bar-image'
+						Key: 'mock-scheme/v9/bar-image-d'
 					});
 					assert.calledWith(AWS.S3.mockInstance.upload, {
 						ACL: 'public-read',
 						Body: fileStream,
 						ContentType: 'mock-mimetype',
-						Key: 'mock-scheme/v9/bar-image.jpg'
+						Key: 'mock-scheme/v9/bar-image-d.jpg'
 					});
 					assert.calledWith(AWS.S3.mockInstance.upload, {
 						ACL: 'public-read',
 						Body: fileStream,
 						ContentType: 'mock-mimetype',
-						Key: 'mock-scheme/v9/baz-image'
+						Key: 'mock-scheme/v9/baz-image-f'
 					});
 					assert.calledWith(AWS.S3.mockInstance.upload, {
 						ACL: 'public-read',
 						Body: fileStream,
 						ContentType: 'mock-mimetype',
-						Key: 'mock-scheme/v9/baz-image.svg'
+						Key: 'mock-scheme/v9/baz-image-f.svg'
 					});
 				});
 
 				it('logs that each image has been published', function () {
-					assert.calledWithExactly(log.info, '✔︎ Published "src/foo-image.png" to S3 under "mock-scheme/v9/foo-image"');
-					assert.calledWithExactly(log.info, '✔︎ Published "src/foo-image.png" to S3 under "mock-scheme/v9/foo-image.png"');
-					assert.calledWithExactly(log.info, '✔︎ Published "src/bar-image.jpg" to S3 under "mock-scheme/v9/bar-image"');
-					assert.calledWithExactly(log.info, '✔︎ Published "src/bar-image.jpg" to S3 under "mock-scheme/v9/bar-image.jpg"');
-					assert.calledWithExactly(log.info, '✔︎ Published "src/baz-image.svg" to S3 under "mock-scheme/v9/baz-image"');
-					assert.calledWithExactly(log.info, '✔︎ Published "src/baz-image.svg" to S3 under "mock-scheme/v9/baz-image.svg"');
+					assert.calledWithExactly(log.info, '✔︎ Published "src/foo-image.png" to S3 under "mock-scheme/v9/foo-image-b"');
+					assert.calledWithExactly(log.info, '✔︎ Published "src/foo-image.png" to S3 under "mock-scheme/v9/foo-image-b.png"');
+					assert.calledWithExactly(log.info, '✔︎ Published "src/bar-image.jpg" to S3 under "mock-scheme/v9/bar-image-d"');
+					assert.calledWithExactly(log.info, '✔︎ Published "src/bar-image.jpg" to S3 under "mock-scheme/v9/bar-image-d.jpg"');
+					assert.calledWithExactly(log.info, '✔︎ Published "src/baz-image.svg" to S3 under "mock-scheme/v9/baz-image-f"');
+					assert.calledWithExactly(log.info, '✔︎ Published "src/baz-image.svg" to S3 under "mock-scheme/v9/baz-image-f.svg"');
 				});
 
 				it('resolves with `undefined`', function () {
