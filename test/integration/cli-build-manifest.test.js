@@ -36,6 +36,8 @@ describe('oist build-manifest', function() {
 		let manifestJson;
 		assert.doesNotThrow(() => manifestJson = JSON.parse(manifestContents));
 		assert.deepEqual(manifestJson, {
+			version: '0.0.0',
+			'host': 'https://www.ft.com',
 			sourceDirectory: 'src',
 			scheme: 'noscheme',
 			images: [
@@ -121,6 +123,8 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist build-manifest', functio
 		let manifestJson;
 		assert.doesNotThrow(() => manifestJson = JSON.parse(manifestContents));
 		assert.deepEqual(manifestJson, {
+			version: '0.0.0',
+			'host': 'https://www.ft.com',
 			sourceDirectory: 'is-a-directory',
 			scheme: 'noscheme',
 			images: []
@@ -160,6 +164,8 @@ describe('oist build-manifest --scheme test-scheme', function() {
 		let manifestJson;
 		assert.doesNotThrow(() => manifestJson = JSON.parse(manifestContents));
 		assert.deepEqual(manifestJson, {
+			version: '0.0.0',
+			'host': 'https://www.ft.com',
 			sourceDirectory: 'src',
 			scheme: 'test-scheme',
 			images: []
@@ -200,6 +206,8 @@ describe('IMAGESET_SCHEME=test-scheme oist build-manifest', function() {
 		let manifestJson;
 		assert.doesNotThrow(() => manifestJson = JSON.parse(manifestContents));
 		assert.deepEqual(manifestJson, {
+			version: '0.0.0',
+			'host': 'https://www.ft.com',
 			sourceDirectory: 'src',
 			scheme: 'test-scheme',
 			images: []
