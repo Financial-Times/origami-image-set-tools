@@ -127,6 +127,7 @@ describe('lib/origami-image-set-tools', function () {
 				awsAccessKey: 'mock-aws-key',
 				awsSecretKey: 'mock-aws-secret',
 				baseDirectory: 'mock-base-directory',
+				host: 'https://origami.ft.com',
 				imageServiceApiKey: 'mock-image-service-api-key',
 				imageServiceUrl: 'mock-image-service-url',
 				log: log,
@@ -205,6 +206,8 @@ describe('lib/origami-image-set-tools', function () {
 
 				it('resolves with an object that contains the image names', function () {
 					assert.deepEqual(resolvedValue, {
+						version: options.version,
+						host: options.host,
 						sourceDirectory: options.sourceDirectory,
 						scheme: options.scheme,
 						images: [{
@@ -244,6 +247,8 @@ describe('lib/origami-image-set-tools', function () {
 
 					beforeEach(function () {
 						instance.readImageSetManifest = () => Promise.resolve({
+							version: options.version,
+							host: options.host,
 							sourceDirectory: options.sourceDirectory,
 							scheme: options.scheme,
 							images: [{
@@ -296,6 +301,8 @@ describe('lib/origami-image-set-tools', function () {
 
 					it('resolves with an object that contains the image names', function () {
 						assert.deepEqual(resolvedValue, {
+							version: options.version,
+							host: options.host,
 							sourceDirectory: options.sourceDirectory,
 							scheme: options.scheme,
 							images: [{
@@ -654,7 +661,7 @@ describe('lib/origami-image-set-tools', function () {
 						}
 						]
 					};
-					instance.buildImageSetManifest = sinon.stub().resolves(imageSetManifest);
+					instance.readImageSetManifest = sinon.stub().resolves(imageSetManifest);
 
 					mime.lookup.returns('mock-mimetype');
 
@@ -686,8 +693,8 @@ describe('lib/origami-image-set-tools', function () {
 					});
 				});
 
-				it('builds an image set manifest', function () {
-					assert.calledOnce(instance.buildImageSetManifest);
+				it('reads an image set manifest', function () {
+					assert.calledOnce(instance.readImageSetManifest);
 				});
 
 				it('logs that each image is being published', function () {
