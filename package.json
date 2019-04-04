@@ -52,6 +52,7 @@
     "npm-prepublish": "^1.2.3",
     "nyc": "^11.9.0",
     "proclaim": "^3.6.0",
+    "rimraf": "^2.6.3",
     "sinon": "^4.5.0"
   }
 }
