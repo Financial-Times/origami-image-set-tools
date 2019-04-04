@@ -23,7 +23,7 @@ describe('oist build-manifest', function() {
 	});
 
 	it('outputs a success message', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} build-manifest`)
 			.stdout(/building manifest file/i)
 			.stdout(/manifest file saved/i)
@@ -31,7 +31,7 @@ describe('oist build-manifest', function() {
 	});
 
 	it('exits with a code of 0', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} build-manifest`).code(0).end(done);
 	});
 
@@ -69,7 +69,7 @@ describe('oist build-manifest --source-directory is-a-directory', function() {
 	});
 
 	it('outputs a success message', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} build-manifest --source-directory is-a-directory`)
 			.stdout(/building manifest file/i)
 			.stdout(/manifest file saved/i)
@@ -77,7 +77,7 @@ describe('oist build-manifest --source-directory is-a-directory', function() {
 	});
 
 	it('exits with a code of 0', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} build-manifest --source-directory is-a-directory`)
 			.code(0)
 			.end(done);
@@ -110,7 +110,7 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist build-manifest', functio
 	});
 
 	it('outputs a success message', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.env('IMAGESET_SOURCE_DIRECTORY', 'is-a-directory')
 			.run(`${oist} build-manifest`)
 			.stdout(/building manifest file/i)
@@ -119,7 +119,7 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist build-manifest', functio
 	});
 
 	it('exits with a code of 0', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.env('IMAGESET_SOURCE_DIRECTORY', 'is-a-directory')
 			.run(`${oist} build-manifest`)
 			.code(0)
@@ -153,7 +153,7 @@ describe('oist build-manifest --scheme test-scheme', function() {
 	});
 
 	it('outputs a success message', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} build-manifest --scheme test-scheme`)
 			.stdout(/building manifest file/i)
 			.stdout(/manifest file saved/i)
@@ -161,7 +161,7 @@ describe('oist build-manifest --scheme test-scheme', function() {
 	});
 
 	it('exits with a code of 0', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} build-manifest --scheme test-scheme`)
 			.code(0)
 			.end(done);
@@ -194,7 +194,7 @@ describe('IMAGESET_SCHEME=test-scheme oist build-manifest', function() {
 	});
 
 	it('outputs a success message', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.env('IMAGESET_SCHEME', 'test-scheme')
 			.run(`${oist} build-manifest`)
 			.stdout(/building manifest file/i)
@@ -203,7 +203,7 @@ describe('IMAGESET_SCHEME=test-scheme oist build-manifest', function() {
 	});
 
 	it('exits with a code of 0', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.env('IMAGESET_SCHEME', 'test-scheme')
 			.run(`${oist} build-manifest`)
 			.code(0)
@@ -239,7 +239,7 @@ describe('oist build-manifest --legacy', function() {
 	});
 
 	it('outputs a success message', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} build-manifest --legacy`)
 			.stdout(/building legacy manifest file/i)
 			.stdout(/legacy manifest file saved/i)
@@ -247,7 +247,7 @@ describe('oist build-manifest --legacy', function() {
 	});
 
 	it('exits with a code of 0', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} build-manifest --legacy`)
 			.code(0)
 			.end(done);
@@ -272,7 +272,7 @@ describe('oist build-manifest --legacy', function() {
 describe('oist build-manifest --source-directory not-a-directory', function() {
 
 	it('outputs an error', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} build-manifest --source-directory not-a-directory`)
 			.stdout(/building manifest file/i)
 			.stdout(/manifest file could not be saved/i)
@@ -280,7 +280,7 @@ describe('oist build-manifest --source-directory not-a-directory', function() {
 	});
 
 	it('exits with a code of 1', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} build-manifest --source-directory not-a-directory`)
 			.code(1)
 			.end(done);

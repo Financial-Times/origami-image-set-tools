@@ -72,7 +72,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('outputs a success message', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
 				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
@@ -87,7 +87,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('exits with a code of 0', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
 				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
@@ -134,7 +134,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('outputs a success message', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.env('AWS_ACCESS_KEY', process.env.TEST_AWS_ACCESS_KEY)
 				.env('AWS_SECRET_KEY', process.env.TEST_AWS_SECRET_KEY)
 				.env('AWS_BUCKET', process.env.TEST_AWS_BUCKET)
@@ -149,7 +149,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('exits with a code of 0', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.env('AWS_ACCESS_KEY', process.env.TEST_AWS_ACCESS_KEY)
 				.env('AWS_SECRET_KEY', process.env.TEST_AWS_SECRET_KEY)
 				.env('AWS_BUCKET', process.env.TEST_AWS_BUCKET)
@@ -196,7 +196,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('outputs a success message', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
 				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
@@ -214,7 +214,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('exits with a code of 0', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
 				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
@@ -265,7 +265,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('outputs a success message', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.env('IMAGESET_SCHEME', 'test-scheme')
 				.env('IMAGESET_VERSION', 'v4.5.6')
 				.run(`${oist} publish-s3
@@ -283,7 +283,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('exits with a code of 0', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.env('IMAGESET_SCHEME', 'test-scheme')
 				.env('IMAGESET_VERSION', 'v4.5.6')
 				.run(`${oist} publish-s3
@@ -333,7 +333,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('outputs a success message', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
 				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
@@ -347,7 +347,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('exits with a code of 0', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
 				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
@@ -396,7 +396,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('outputs a success message', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.env('IMAGESET_SOURCE_DIRECTORY', 'is-a-directory')
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
@@ -410,7 +410,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('exits with a code of 0', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.env('IMAGESET_SOURCE_DIRECTORY', 'is-a-directory')
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
@@ -443,14 +443,14 @@ describe('oist publish-s3', function() {
 
 	describe('oist publish-s3', function() {
 		it('outputs an error', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.run(`${oist} publish-s3`)
 				.stderr(/No AWS credentials are available/i)
 				.end(done);
 		});
 
 		it('exits with a code of 1', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.run(`${oist} publish-s3`)
 				.code(1)
 				.end(done);
@@ -461,7 +461,7 @@ describe('oist publish-s3', function() {
 	describe('oist publish-s3 … --source-directory not-a-directory', function() {
 
 		it('outputs an error', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
 				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
@@ -473,7 +473,7 @@ describe('oist publish-s3', function() {
 		});
 
 		it('exits with a code of 1', function(done) {
-			nixt()
+			nixt().cwd(testDirectory)
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
 				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}

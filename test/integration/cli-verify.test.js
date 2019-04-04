@@ -23,7 +23,7 @@ describe('oist verify', function() {
 	});
 
 	it('outputs a success message', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} verify`)
 			.stdout(/verifying images/i)
 			.stdout(/verified all images/i)
@@ -31,7 +31,7 @@ describe('oist verify', function() {
 	});
 
 	it('exits with a code of 0', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} verify`)
 			.code(0)
 			.end(done);
@@ -56,7 +56,7 @@ describe('oist verify (with invalid images present)', function() {
 	});
 
 	it('outputs an error', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} verify`)
 			.stdout(/verifying images/i)
 			.stdout(/root svg element must not have a `width` attribute/i)
@@ -65,7 +65,7 @@ describe('oist verify (with invalid images present)', function() {
 	});
 
 	it('exits with a code of 1', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} verify`)
 			.code(1)
 			.end(done);
@@ -90,7 +90,7 @@ describe('oist verify --source-directory is-a-directory', function() {
 	});
 
 	it('outputs a success message', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} verify --source-directory is-a-directory`)
 			.stdout(/verifying images/i)
 			.stdout(/verified all images/i)
@@ -98,7 +98,7 @@ describe('oist verify --source-directory is-a-directory', function() {
 	});
 
 	it('exits with a code of 0', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} verify --source-directory is-a-directory`)
 			.code(0)
 			.end(done);
@@ -123,7 +123,7 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist verify', function() {
 	});
 
 	it('outputs a success message', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.env('IMAGESET_SOURCE_DIRECTORY', 'is-a-directory')
 			.run(`${oist} verify`)
 			.stdout(/verifying images/i)
@@ -132,7 +132,7 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist verify', function() {
 	});
 
 	it('exits with a code of 0', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.env('IMAGESET_SOURCE_DIRECTORY', 'is-a-directory')
 			.run(`${oist} verify`)
 			.code(0)
@@ -143,7 +143,7 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist verify', function() {
 
 describe('oist verify --source-directory not-a-directory', function() {
 	it('exits with a code of 1', function(done) {
-		nixt()
+		nixt().cwd(testDirectory)
 			.run(`${oist} verify --source-directory is-a-directory`)
 			.code(1)
 			.end(done);
