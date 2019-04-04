@@ -135,10 +135,10 @@ describe('oist publish-s3', function() {
 
 		it('outputs a success message', function(done) {
 			nixt()
-				.run(`${oist} publish-s3
-				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
-				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
-				--bucket ${process.env.TEST_AWS_BUCKET}`)
+				.env('AWS_ACCESS_KEY', process.env.TEST_AWS_ACCESS_KEY)
+				.env('AWS_SECRET_KEY', process.env.TEST_AWS_SECRET_KEY)
+				.env('AWS_BUCKET', process.env.TEST_AWS_BUCKET)
+				.run(`${oist} publish-s3`)
 				.stdout(/publishing "src\/example1.png" to s3/i)
 				.stdout(/published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i)
 				.stdout(/published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i)
@@ -150,10 +150,10 @@ describe('oist publish-s3', function() {
 
 		it('exits with a code of 0', function(done) {
 			nixt()
-				.run(`${oist} publish-s3
-				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
-				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
-				--bucket ${process.env.TEST_AWS_BUCKET}`).code(0).end(done);
+				.env('AWS_ACCESS_KEY', process.env.TEST_AWS_ACCESS_KEY)
+				.env('AWS_SECRET_KEY', process.env.TEST_AWS_SECRET_KEY)
+				.env('AWS_BUCKET', process.env.TEST_AWS_BUCKET)
+				.run(`${oist} publish-s3`).code(0).end(done);
 		});
 
 		it('publishes the images to S3 under the expected keys', function() {
@@ -275,13 +275,13 @@ describe('oist publish-s3', function() {
 
 		it('outputs a success message', function(done) {
 			nixt()
+				.env('IMAGESET_SCHEME', 'test-scheme')
+				.env('IMAGESET_VERSION', 'v4.5.6')
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
 				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
 				--bucket ${process.env.TEST_AWS_BUCKET}
-				--source-directory ${sourceDirectory}
-				--scheme test-scheme
-				--scheme-version v4.5.6`)
+				--source-directory ${sourceDirectory}`)
 				.stdout(/publishing "src\/example1.png" to s3/i)
 				.stdout(/published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i)
 				.stdout(/published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i)
@@ -293,13 +293,13 @@ describe('oist publish-s3', function() {
 
 		it('exits with a code of 0', function(done) {
 			nixt()
+				.env('IMAGESET_SCHEME', 'test-scheme')
+				.env('IMAGESET_VERSION', 'v4.5.6')
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
 				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
 				--bucket ${process.env.TEST_AWS_BUCKET}
-				--source-directory ${sourceDirectory}
-				--scheme test-scheme
-				--scheme-version v4.5.6`).code(0).end(done);
+				--source-directory ${sourceDirectory}`).code(0).end(done);
 		});
 
 		it('publishes the images to S3 under the expected keys', function() {
@@ -406,11 +406,11 @@ describe('oist publish-s3', function() {
 
 		it('outputs a success message', function(done) {
 			nixt()
+				.env('IMAGESET_SOURCE_DIRECTORY', 'is-a-directory')
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
 				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
-				--bucket ${process.env.TEST_AWS_BUCKET}
-				--source-directory ${sourceDirectory}`)
+				--bucket ${process.env.TEST_AWS_BUCKET}`)
 				.stdout(/publishing "is-a-directory\/example1.png" to s3/i)
 				.stdout(/published "is-a-directory\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i)
 				.stdout(/publishing "is-a-directory\/example2.jpg" to s3/i)
@@ -420,11 +420,11 @@ describe('oist publish-s3', function() {
 
 		it('exits with a code of 0', function(done) {
 			nixt()
+				.env('IMAGESET_SOURCE_DIRECTORY', 'is-a-directory')
 				.run(`${oist} publish-s3
 				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
 				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
-				--bucket ${process.env.TEST_AWS_BUCKET}
-				--source-directory ${sourceDirectory}`)
+				--bucket ${process.env.TEST_AWS_BUCKET}`)
 				.code(0)
 				.end(done);
 		});
