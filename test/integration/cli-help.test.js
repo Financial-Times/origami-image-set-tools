@@ -23,12 +23,6 @@ describe('oist', function() {
 
 describe('oist --help', function() {
 
-	before(function() {
-		return global.cliCall([
-			'--help'
-		]);
-	});
-
 	it('outputs help', function(done) {
 		nixt()
 			.run(`${oist} --help`)
@@ -46,12 +40,6 @@ describe('oist --help', function() {
 });
 
 describe('oist not-a-command', function() {
-
-	before(function() {
-		return global.cliCall([
-			'not-a-command'
-		]);
-	});
 
 	it('outputs an error', function(done) {
 		nixt()

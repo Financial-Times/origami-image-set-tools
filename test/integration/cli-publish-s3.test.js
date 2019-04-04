@@ -49,7 +49,7 @@ function createS3Instance() {
 }
 
 // The actual tests
-
+const testDirectory = fs.mkdtempSync('/tmp/oist-integration');
 describe('oist publish-s3', function() {
 	this.timeout(30000);
 
@@ -57,7 +57,7 @@ describe('oist publish-s3', function() {
 		let sourceDirectory;
 
 		before(function() {
-			sourceDirectory = path.join(global.testDirectory, 'src');
+			sourceDirectory = path.join(testDirectory, 'src');
 			fs.mkdirSync(sourceDirectory);
 			fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 			fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
@@ -119,7 +119,7 @@ describe('oist publish-s3', function() {
 		let sourceDirectory;
 
 		before(function() {
-			sourceDirectory = path.join(global.testDirectory, 'src');
+			sourceDirectory = path.join(testDirectory, 'src');
 			fs.mkdirSync(sourceDirectory);
 			fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 			fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
@@ -181,20 +181,11 @@ describe('oist publish-s3', function() {
 		let sourceDirectory;
 
 		before(function() {
-			sourceDirectory = path.join(global.testDirectory, 'src');
+			sourceDirectory = path.join(testDirectory, 'src');
 			fs.mkdirSync(sourceDirectory);
 			fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 			fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
-			return clearBucket().then(function() {
-				return global.cliCall([
-					'publish-s3',
-					'--aws-access-key', process.env.TEST_AWS_ACCESS_KEY,
-					'--aws-secret-key', process.env.TEST_AWS_SECRET_KEY,
-					'--bucket', process.env.TEST_AWS_BUCKET,
-					'--scheme', 'test-scheme',
-					'--scheme-version', 'v4.5.6'
-				]);
-			});
+			return clearBucket();
 		});
 
 		after(function() {
@@ -259,7 +250,7 @@ describe('oist publish-s3', function() {
 		let sourceDirectory;
 
 		before(function() {
-			sourceDirectory = path.join(global.testDirectory, 'src');
+			sourceDirectory = path.join(testDirectory, 'src');
 			fs.mkdirSync(sourceDirectory);
 			fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 			fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
@@ -327,7 +318,7 @@ describe('oist publish-s3', function() {
 		let sourceDirectory;
 
 		before(function() {
-			sourceDirectory = path.join(global.testDirectory, 'is-a-directory');
+			sourceDirectory = path.join(testDirectory, 'is-a-directory');
 			fs.mkdirSync(sourceDirectory);
 			fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 			fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
@@ -390,7 +381,7 @@ describe('oist publish-s3', function() {
 		let sourceDirectory;
 
 		beforeEach(function() {
-			sourceDirectory = path.join(global.testDirectory, 'is-a-directory');
+			sourceDirectory = path.join(testDirectory, 'is-a-directory');
 			fs.mkdirSync(sourceDirectory);
 			fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 			fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');

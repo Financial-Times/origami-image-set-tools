@@ -5,11 +5,14 @@ const fs = require('fs');
 const path = require('path');
 const nixt = require('nixt');
 const oist = path.join(__dirname, '../../', require('../../package.json').bin.oist);
+
+const testDirectory = fs.mkdtempSync('/tmp/oist-integration');
+
 describe('oist build-manifest', function() {
 	let sourceDirectory;
 
 	before(function() {
-		sourceDirectory = path.join(global.testDirectory, 'src');
+		sourceDirectory = path.join(testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
 	});
@@ -33,7 +36,7 @@ describe('oist build-manifest', function() {
 	});
 
 	it('creates the manifest file', function() {
-		const manifestPath = path.join(global.testDirectory, 'imageset.json');
+		const manifestPath = path.join(testDirectory, 'imageset.json');
 		const manifestContents = fs.readFileSync(manifestPath);
 		let manifestJson;
 		assert.doesNotThrow(() => manifestJson = JSON.parse(manifestContents));
@@ -57,7 +60,7 @@ describe('oist build-manifest --source-directory is-a-directory', function() {
 	let sourceDirectory;
 
 	before(function() {
-		sourceDirectory = path.join(global.testDirectory, 'is-a-directory');
+		sourceDirectory = path.join(testDirectory, 'is-a-directory');
 		fs.mkdirSync(sourceDirectory);
 	});
 
@@ -81,7 +84,7 @@ describe('oist build-manifest --source-directory is-a-directory', function() {
 	});
 
 	it('creates the manifest file', function() {
-		const manifestPath = path.join(global.testDirectory, 'imageset.json');
+		const manifestPath = path.join(testDirectory, 'imageset.json');
 		const manifestContents = fs.readFileSync(manifestPath);
 		let manifestJson;
 		assert.doesNotThrow(() => manifestJson = JSON.parse(manifestContents));
@@ -98,7 +101,7 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist build-manifest', functio
 	let sourceDirectory;
 
 	before(function() {
-		sourceDirectory = path.join(global.testDirectory, 'is-a-directory');
+		sourceDirectory = path.join(testDirectory, 'is-a-directory');
 		fs.mkdirSync(sourceDirectory);
 	});
 
@@ -124,7 +127,7 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist build-manifest', functio
 	});
 
 	it('creates the manifest file', function() {
-		const manifestPath = path.join(global.testDirectory, 'imageset.json');
+		const manifestPath = path.join(testDirectory, 'imageset.json');
 		const manifestContents = fs.readFileSync(manifestPath);
 		let manifestJson;
 		assert.doesNotThrow(() => manifestJson = JSON.parse(manifestContents));
@@ -141,7 +144,7 @@ describe('oist build-manifest --scheme test-scheme', function() {
 	let sourceDirectory;
 
 	before(function() {
-		sourceDirectory = path.join(global.testDirectory, 'src');
+		sourceDirectory = path.join(testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 	});
 
@@ -165,7 +168,7 @@ describe('oist build-manifest --scheme test-scheme', function() {
 	});
 
 	it('creates the manifest file', function() {
-		const manifestPath = path.join(global.testDirectory, 'imageset.json');
+		const manifestPath = path.join(testDirectory, 'imageset.json');
 		const manifestContents = fs.readFileSync(manifestPath);
 		let manifestJson;
 		assert.doesNotThrow(() => manifestJson = JSON.parse(manifestContents));
@@ -182,7 +185,7 @@ describe('IMAGESET_SCHEME=test-scheme oist build-manifest', function() {
 	let sourceDirectory;
 
 	before(function() {
-		sourceDirectory = path.join(global.testDirectory, 'src');
+		sourceDirectory = path.join(testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 	});
 
@@ -208,7 +211,7 @@ describe('IMAGESET_SCHEME=test-scheme oist build-manifest', function() {
 	});
 
 	it('creates the manifest file', function() {
-		const manifestPath = path.join(global.testDirectory, 'imageset.json');
+		const manifestPath = path.join(testDirectory, 'imageset.json');
 		const manifestContents = fs.readFileSync(manifestPath);
 		let manifestJson;
 		assert.doesNotThrow(() => manifestJson = JSON.parse(manifestContents));
@@ -225,13 +228,9 @@ describe('oist build-manifest --legacy', function() {
 	let sourceDirectory;
 
 	before(function() {
-		sourceDirectory = path.join(global.testDirectory, 'src');
+		sourceDirectory = path.join(testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
-		return global.cliCall([
-			'build-manifest',
-			'--legacy'
-		]);
 	});
 
 	after(function() {
@@ -255,7 +254,7 @@ describe('oist build-manifest --legacy', function() {
 	});
 
 	it('creates the legacy manifest file', function() {
-		const manifestPath = path.join(global.testDirectory, 'imageList.json');
+		const manifestPath = path.join(testDirectory, 'imageList.json');
 		const manifestContents = fs.readFileSync(manifestPath);
 		let manifestJson;
 		assert.doesNotThrow(() => manifestJson = JSON.parse(manifestContents));
@@ -271,13 +270,6 @@ describe('oist build-manifest --legacy', function() {
 });
 
 describe('oist build-manifest --source-directory not-a-directory', function() {
-
-	before(function() {
-		return global.cliCall([
-			'build-manifest',
-			'--source-directory not-a-directory'
-		]);
-	});
 
 	it('outputs an error', function(done) {
 		nixt()

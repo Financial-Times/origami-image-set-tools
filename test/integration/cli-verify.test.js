@@ -1,16 +1,16 @@
 'use strict';
 
-const assert = require('proclaim');
 const fs = require('fs');
 const path = require('path');
 const nixt = require('nixt');
 const oist = path.join(__dirname, '../../', require('../../package.json').bin.oist);
 
+const testDirectory = fs.mkdtempSync('/tmp/oist-integration');
 describe('oist verify', function() {
 	let sourceDirectory;
 
 	before(function() {
-		sourceDirectory = path.join(global.testDirectory, 'src');
+		sourceDirectory = path.join(testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'valid.svg'), '<svg></svg>');
@@ -43,7 +43,7 @@ describe('oist verify (with invalid images present)', function() {
 	let sourceDirectory;
 
 	before(function() {
-		sourceDirectory = path.join(global.testDirectory, 'src');
+		sourceDirectory = path.join(testDirectory, 'src');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'valid.svg'), '<svg width="100" height="100"></svg>');
@@ -77,7 +77,7 @@ describe('oist verify --source-directory is-a-directory', function() {
 	let sourceDirectory;
 
 	before(function() {
-		sourceDirectory = path.join(global.testDirectory, 'is-a-directory');
+		sourceDirectory = path.join(testDirectory, 'is-a-directory');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'valid.svg'), '<svg></svg>');
@@ -110,7 +110,7 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist verify', function() {
 	let sourceDirectory;
 
 	before(function() {
-		sourceDirectory = path.join(global.testDirectory, 'is-a-directory');
+		sourceDirectory = path.join(testDirectory, 'is-a-directory');
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'valid.svg'), '<svg></svg>');
