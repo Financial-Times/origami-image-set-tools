@@ -50,10 +50,10 @@ function createS3Instance() {
 
 // The actual tests
 
-describe.only('oist publish-s3', function() {
+describe('oist publish-s3', function() {
 	this.timeout(30000);
 
-	describe.skip('oist publish-s3 --aws-access-key XXXXX --aws-secret-key XXXXX --bucket origami-imageset-testing', function() {
+	describe('oist publish-s3 --aws-access-key XXXXX --aws-secret-key XXXXX --bucket origami-imageset-testing', function() {
 		let sourceDirectory;
 
 		before(function() {
@@ -61,14 +61,7 @@ describe.only('oist publish-s3', function() {
 			fs.mkdirSync(sourceDirectory);
 			fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 			fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
-			return clearBucket().then(function() {
-				return global.cliCall([
-					'publish-s3',
-					'--aws-access-key', process.env.TEST_AWS_ACCESS_KEY,
-					'--aws-secret-key', process.env.TEST_AWS_SECRET_KEY,
-					'--bucket', process.env.TEST_AWS_BUCKET
-				]);
-			});
+			return clearBucket();
 		});
 
 		after(function() {
@@ -78,17 +71,27 @@ describe.only('oist publish-s3', function() {
 			return clearBucket();
 		});
 
-		it('outputs a success message', function() {
-			assert.match(global.cliCall.lastResult.output, /publishing "src\/example1.png" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i);
-			assert.match(global.cliCall.lastResult.output, /publishing "src\/example2.jpg" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg"/i);
+		it('outputs a success message', function(done) {
+			nixt()
+				.run(`${oist} publish-s3
+				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
+				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
+				--bucket ${process.env.TEST_AWS_BUCKET}`)
+				.stdout(/publishing "src\/example1.png" to s3/i)
+				.stdout(/published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i)
+				.stdout(/published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i)
+				.stdout(/publishing "src\/example2.jpg" to s3/i)
+				.stdout(/published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i)
+				.stdout(/published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg"/i)
+				.end(done);
 		});
 
-		it('exits with a code of 0', function() {
-			assert.strictEqual(global.cliCall.lastResult.code, 0);
+		it('exits with a code of 0', function(done) {
+			nixt()
+				.run(`${oist} publish-s3
+				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
+				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
+				--bucket ${process.env.TEST_AWS_BUCKET}`).code(0).end(done);
 		});
 
 		it('publishes the images to S3 under the expected keys', function() {
@@ -112,7 +115,7 @@ describe.only('oist publish-s3', function() {
 
 	});
 
-	describe.skip('AWS_ACCESS_KEY=XXXXX AWS_SECRET_KEY=XXXXX AWS_BUCKET=origami-imageset-testing oist publish-s3', function() {
+	describe('AWS_ACCESS_KEY=XXXXX AWS_SECRET_KEY=XXXXX AWS_BUCKET=origami-imageset-testing oist publish-s3', function() {
 		let sourceDirectory;
 
 		before(function() {
@@ -120,15 +123,7 @@ describe.only('oist publish-s3', function() {
 			fs.mkdirSync(sourceDirectory);
 			fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 			fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
-			return clearBucket().then(function() {
-				return global.cliCall([
-					'publish-s3'
-				], {
-					'AWS_ACCESS_KEY': process.env.TEST_AWS_ACCESS_KEY,
-					'AWS_SECRET_KEY': process.env.TEST_AWS_SECRET_KEY,
-					'AWS_BUCKET': process.env.TEST_AWS_BUCKET
-				});
-			});
+			return clearBucket();
 		});
 
 		after(function() {
@@ -138,17 +133,27 @@ describe.only('oist publish-s3', function() {
 			return clearBucket();
 		});
 
-		it('outputs a success message', function() {
-			assert.match(global.cliCall.lastResult.output, /publishing "src\/example1.png" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i);
-			assert.match(global.cliCall.lastResult.output, /publishing "src\/example2.jpg" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg"/i);
+		it('outputs a success message', function(done) {
+			nixt()
+				.run(`${oist} publish-s3
+				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
+				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
+				--bucket ${process.env.TEST_AWS_BUCKET}`)
+				.stdout(/publishing "src\/example1.png" to s3/i)
+				.stdout(/published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i)
+				.stdout(/published "src\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i)
+				.stdout(/publishing "src\/example2.jpg" to s3/i)
+				.stdout(/published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i)
+				.stdout(/published "src\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg"/i)
+				.end(done);
 		});
 
-		it('exits with a code of 0', function() {
-			assert.strictEqual(global.cliCall.lastResult.code, 0);
+		it('exits with a code of 0', function(done) {
+			nixt()
+				.run(`${oist} publish-s3
+				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
+				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
+				--bucket ${process.env.TEST_AWS_BUCKET}`).code(0).end(done);
 		});
 
 		it('publishes the images to S3 under the expected keys', function() {
@@ -172,7 +177,7 @@ describe.only('oist publish-s3', function() {
 
 	});
 
-	describe.skip('oist publish-s3 … --scheme test-scheme --scheme-version v4.5.6', function() {
+	describe('oist publish-s3 … --scheme test-scheme --scheme-version v4.5.6', function() {
 		let sourceDirectory;
 
 		before(function() {
@@ -199,17 +204,34 @@ describe.only('oist publish-s3', function() {
 			return clearBucket();
 		});
 
-		it('outputs a success message', function() {
-			assert.match(global.cliCall.lastResult.output, /publishing "src\/example1.png" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i);
-			assert.match(global.cliCall.lastResult.output, /publishing "src\/example2.jpg" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg"/i);
+		it('outputs a success message', function(done) {
+			nixt()
+				.run(`${oist} publish-s3
+				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
+				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
+				--bucket ${process.env.TEST_AWS_BUCKET}
+				--source-directory ${sourceDirectory}
+				--scheme test-scheme
+				--scheme-version v4.5.6`)
+				.stdout(/publishing "src\/example1.png" to s3/i)
+				.stdout(/published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i)
+				.stdout(/published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i)
+				.stdout(/publishing "src\/example2.jpg" to s3/i)
+				.stdout(/published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i)
+				.stdout(/published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg"/i)
+				.end(done);
 		});
 
-		it('exits with a code of 0', function() {
-			assert.strictEqual(global.cliCall.lastResult.code, 0);
+		it('exits with a code of 0', function(done) {
+			nixt()
+				.run(`${oist} publish-s3
+				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
+				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
+				--bucket ${process.env.TEST_AWS_BUCKET}
+				--source-directory ${sourceDirectory}
+				--scheme test-scheme
+				--scheme-version v4.5.6`)
+				.code(0).end(done);
 		});
 
 		it('publishes the images to S3 under the expected keys', function() {
@@ -233,7 +255,7 @@ describe.only('oist publish-s3', function() {
 
 	});
 
-	describe.skip('IMAGESET_SCHEME=test-scheme IMAGESET_VERSION=v4.5.6 … oist publish-s3', function() {
+	describe('IMAGESET_SCHEME=test-scheme IMAGESET_VERSION=v4.5.6 … oist publish-s3', function() {
 		let sourceDirectory;
 
 		before(function() {
@@ -241,17 +263,7 @@ describe.only('oist publish-s3', function() {
 			fs.mkdirSync(sourceDirectory);
 			fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 			fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
-			return clearBucket().then(function() {
-				return global.cliCall([
-					'publish-s3'
-				], {
-					'AWS_ACCESS_KEY': process.env.TEST_AWS_ACCESS_KEY,
-					'AWS_SECRET_KEY': process.env.TEST_AWS_SECRET_KEY,
-					'AWS_BUCKET': process.env.TEST_AWS_BUCKET,
-					'IMAGESET_SCHEME': 'test-scheme',
-					'IMAGESET_VERSION': 'v4.5.6'
-				});
-			});
+			return clearBucket();
 		});
 
 		after(function() {
@@ -261,17 +273,33 @@ describe.only('oist publish-s3', function() {
 			return clearBucket();
 		});
 
-		it('outputs a success message', function() {
-			assert.match(global.cliCall.lastResult.output, /publishing "src\/example1.png" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i);
-			assert.match(global.cliCall.lastResult.output, /publishing "src\/example2.jpg" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i);
-			assert.match(global.cliCall.lastResult.output, /published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg"/i);
+		it('outputs a success message', function(done) {
+			nixt()
+				.run(`${oist} publish-s3
+				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
+				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
+				--bucket ${process.env.TEST_AWS_BUCKET}
+				--source-directory ${sourceDirectory}
+				--scheme test-scheme
+				--scheme-version v4.5.6`)
+				.stdout(/publishing "src\/example1.png" to s3/i)
+				.stdout(/published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i)
+				.stdout(/published "src\/example1.png" to s3 under "test-scheme\/v4\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda.png"/i)
+				.stdout(/publishing "src\/example2.jpg" to s3/i)
+				.stdout(/published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i)
+				.stdout(/published "src\/example2.jpg" to s3 under "test-scheme\/v4\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5.jpg"/i)
+				.end(done);
 		});
 
-		it('exits with a code of 0', function() {
-			assert.strictEqual(global.cliCall.lastResult.code, 0);
+		it('exits with a code of 0', function(done) {
+			nixt()
+				.run(`${oist} publish-s3
+				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
+				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
+				--bucket ${process.env.TEST_AWS_BUCKET}
+				--source-directory ${sourceDirectory}
+				--scheme test-scheme
+				--scheme-version v4.5.6`).code(0).end(done);
 		});
 
 		it('publishes the images to S3 under the expected keys', function() {
@@ -295,7 +323,7 @@ describe.only('oist publish-s3', function() {
 
 	});
 
-	describe.skip('oist publish-s3 … --source-directory is-a-directory', function() {
+	describe('oist publish-s3 … --source-directory is-a-directory', function() {
 		let sourceDirectory;
 
 		before(function() {
@@ -303,15 +331,7 @@ describe.only('oist publish-s3', function() {
 			fs.mkdirSync(sourceDirectory);
 			fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 			fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
-			return clearBucket().then(function() {
-				return global.cliCall([
-					'publish-s3',
-					'--aws-access-key', process.env.TEST_AWS_ACCESS_KEY,
-					'--aws-secret-key', process.env.TEST_AWS_SECRET_KEY,
-					'--bucket', process.env.TEST_AWS_BUCKET,
-					'--source-directory', 'is-a-directory'
-				]);
-			});
+			return clearBucket();
 		});
 
 		after(function() {
@@ -321,15 +341,28 @@ describe.only('oist publish-s3', function() {
 			return clearBucket();
 		});
 
-		it('outputs a success message', function() {
-			assert.match(global.cliCall.lastResult.output, /publishing "is-a-directory\/example1.png" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i);
-			assert.match(global.cliCall.lastResult.output, /publishing "is-a-directory\/example2.jpg" to s3/i);
-			assert.match(global.cliCall.lastResult.output, /published "is-a-directory\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i);
+		it('outputs a success message', function(done) {
+			nixt()
+				.run(`${oist} publish-s3
+				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
+				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
+				--bucket ${process.env.TEST_AWS_BUCKET}
+				--source-directory ${sourceDirectory}`)
+				.stdout(/publishing "is-a-directory\/example1.png" to s3/i)
+				.stdout(/published "is-a-directory\/example1.png" to s3 under "noscheme\/v0\/example1-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda"/i)
+				.stdout(/publishing "is-a-directory\/example2.jpg" to s3/i)
+				.stdout(/published "is-a-directory\/example2.jpg" to s3 under "noscheme\/v0\/example2-50e86c00c0815c1bd1c92e157ab234eb9b4f1f816b63f48ef9f9633e3ab9749d73086516db5f29e43b15fb2d3dd4ce96f7949cd8906198c78f039f86f8f671a5"/i)
+				.end(done);
 		});
 
-		it('exits with a code of 0', function() {
-			assert.strictEqual(global.cliCall.lastResult.code, 0);
+		it('exits with a code of 0', function(done) {
+			nixt()
+				.run(`${oist} publish-s3
+				--aws-access-key ${process.env.TEST_AWS_ACCESS_KEY}
+				--aws-secret-key ${process.env.TEST_AWS_SECRET_KEY}
+				--bucket ${process.env.TEST_AWS_BUCKET}
+				--source-directory ${sourceDirectory}`)
+				.code(0).end(done);
 		});
 
 		it('publishes the images to S3 under the expected keys', function() {
@@ -361,16 +394,7 @@ describe.only('oist publish-s3', function() {
 			fs.mkdirSync(sourceDirectory);
 			fs.writeFileSync(path.join(sourceDirectory, 'example1.png'), 'not-really-a-png');
 			fs.writeFileSync(path.join(sourceDirectory, 'example2.jpg'), 'not-really-a-jpg');
-			return clearBucket().then(function() {
-				return global.cliCall([
-					'publish-s3'
-				], {
-					'AWS_ACCESS_KEY': process.env.TEST_AWS_ACCESS_KEY,
-					'AWS_SECRET_KEY': process.env.TEST_AWS_SECRET_KEY,
-					'AWS_BUCKET': process.env.TEST_AWS_BUCKET,
-					'IMAGESET_SOURCE_DIRECTORY': 'is-a-directory'
-				});
-			});
+			return clearBucket();
 		});
 
 		afterEach(function() {
