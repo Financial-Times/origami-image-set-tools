@@ -1,19 +1,22 @@
 'use strict';
 
-const assert = require('proclaim');
+const nixt = require('nixt');
+const path = require('path');
+const oist = path.join(__dirname, '../../', require('../../package.json').bin.oist);
 
 describe('oist', function() {
-
-	before(function() {
-		return global.cliCall([]);
+	it('outputs help', function(done) {
+		nixt()
+			.run(`${oist}`)
+			.stdout(/usage:/i)
+			.end(done);
 	});
 
-	it('outputs help', function() {
-		assert.match(global.cliCall.lastResult.output, /usage:/i);
-	});
-
-	it('exits with a code of 0', function() {
-		assert.strictEqual(global.cliCall.lastResult.code, 0);
+	it('exits with a code of 0', function(done) {
+		nixt()
+			.run(`${oist}`)
+			.code(0)
+			.end(done);
 	});
 
 });
@@ -26,12 +29,18 @@ describe('oist --help', function() {
 		]);
 	});
 
-	it('outputs help', function() {
-		assert.match(global.cliCall.lastResult.output, /usage:/i);
+	it('outputs help', function(done) {
+		nixt()
+			.run(`${oist} --help`)
+			.stdout(/usage:/i)
+			.end(done);
 	});
 
-	it('exits with a code of 0', function() {
-		assert.strictEqual(global.cliCall.lastResult.code, 0);
+	it('exits with a code of 0', function(done) {
+		nixt()
+			.run(`${oist} --help`)
+			.code(0)
+			.end(done);
 	});
 
 });
@@ -44,12 +53,18 @@ describe('oist not-a-command', function() {
 		]);
 	});
 
-	it('outputs an error', function() {
-		assert.include(global.cliCall.lastResult.output, 'Command "not-a-command" not found');
+	it('outputs an error', function(done) {
+		nixt()
+			.run(`${oist} not-a-command`)
+			.stdout('Command "not-a-command" not found')
+			.end(done);
 	});
 
-	it('exits with a code of 1', function() {
-		assert.strictEqual(global.cliCall.lastResult.code, 1);
+	it('exits with a code of 1', function(done) {
+		nixt()
+			.run(`${oist} not-a-command`)
+			.code(1)
+			.end(done);
 	});
 
 });

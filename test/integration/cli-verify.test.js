@@ -3,6 +3,8 @@
 const assert = require('proclaim');
 const fs = require('fs');
 const path = require('path');
+const nixt = require('nixt');
+const oist = path.join(__dirname, '../../', require('../../package.json').bin.oist);
 
 describe('oist verify', function() {
 	let sourceDirectory;
@@ -12,9 +14,6 @@ describe('oist verify', function() {
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'valid.svg'), '<svg></svg>');
-		return global.cliCall([
-			'verify'
-		]);
 	});
 
 	after(function() {
@@ -23,13 +22,19 @@ describe('oist verify', function() {
 		fs.rmdirSync(sourceDirectory);
 	});
 
-	it('outputs a success message', function() {
-		assert.match(global.cliCall.lastResult.output, /verifying images/i);
-		assert.match(global.cliCall.lastResult.output, /verified all images/i);
+	it('outputs a success message', function(done) {
+		nixt()
+			.run(`${oist} verify`)
+			.stdout(/verifying images/i)
+			.stdout(/verified all images/i)
+			.end(done);
 	});
 
-	it('exits with a code of 0', function() {
-		assert.strictEqual(global.cliCall.lastResult.code, 0);
+	it('exits with a code of 0', function(done) {
+		nixt()
+			.run(`${oist} verify`)
+			.code(0)
+			.end(done);
 	});
 
 });
@@ -42,9 +47,6 @@ describe('oist verify (with invalid images present)', function() {
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'valid.svg'), '<svg width="100" height="100"></svg>');
-		return global.cliCall([
-			'verify'
-		]);
 	});
 
 	after(function() {
@@ -53,14 +55,20 @@ describe('oist verify (with invalid images present)', function() {
 		fs.rmdirSync(sourceDirectory);
 	});
 
-	it('outputs an error', function() {
-		assert.match(global.cliCall.lastResult.output, /verifying images/i);
-		assert.match(global.cliCall.lastResult.output, /root svg element must not have a `width` attribute/i);
-		assert.match(global.cliCall.lastResult.output, /root svg element must not have a `height` attribute/i);
+	it('outputs an error', function(done) {
+		nixt()
+			.run(`${oist} verify`)
+			.stdout(/verifying images/i)
+			.stdout(/root svg element must not have a `width` attribute/i)
+			.stdout(/root svg element must not have a `height` attribute/i)
+			.end(done);
 	});
 
-	it('exits with a code of 1', function() {
-		assert.strictEqual(global.cliCall.lastResult.code, 1);
+	it('exits with a code of 1', function(done) {
+		nixt()
+			.run(`${oist} verify`)
+			.code(1)
+			.end(done);
 	});
 
 });
@@ -73,10 +81,6 @@ describe('oist verify --source-directory is-a-directory', function() {
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'valid.svg'), '<svg></svg>');
-		return global.cliCall([
-			'verify',
-			'--source-directory', 'is-a-directory'
-		]);
 	});
 
 	after(function() {
@@ -85,13 +89,19 @@ describe('oist verify --source-directory is-a-directory', function() {
 		fs.rmdirSync(sourceDirectory);
 	});
 
-	it('outputs a success message', function() {
-		assert.match(global.cliCall.lastResult.output, /verifying images/i);
-		assert.match(global.cliCall.lastResult.output, /verified all images/i);
+	it('outputs a success message', function(done) {
+		nixt()
+			.run(`${oist} verify --source-directory is-a-directory`)
+			.stdout(/verifying images/i)
+			.stdout(/verified all images/i)
+			.end(done);
 	});
 
-	it('exits with a code of 0', function() {
-		assert.strictEqual(global.cliCall.lastResult.code, 0);
+	it('exits with a code of 0', function(done) {
+		nixt()
+			.run(`${oist} verify --source-directory is-a-directory`)
+			.code(0)
+			.end(done);
 	});
 
 });
@@ -104,11 +114,6 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist verify', function() {
 		fs.mkdirSync(sourceDirectory);
 		fs.writeFileSync(path.join(sourceDirectory, 'example.png'), 'not-really-a-png');
 		fs.writeFileSync(path.join(sourceDirectory, 'valid.svg'), '<svg></svg>');
-		return global.cliCall([
-			'verify'
-		], {
-			IMAGESET_SOURCE_DIRECTORY: 'is-a-directory'
-		});
 	});
 
 	after(function() {
@@ -117,28 +122,31 @@ describe('IMAGESET_SOURCE_DIRECTORY=is-a-directory oist verify', function() {
 		fs.rmdirSync(sourceDirectory);
 	});
 
-	it('outputs a success message', function() {
-		assert.match(global.cliCall.lastResult.output, /verifying images/i);
-		assert.match(global.cliCall.lastResult.output, /verified all images/i);
+	it('outputs a success message', function(done) {
+		nixt()
+			.env('IMAGESET_SOURCE_DIRECTORY', 'is-a-directory')
+			.run(`${oist} verify`)
+			.stdout(/verifying images/i)
+			.stdout(/verified all images/i)
+			.end(done);
 	});
 
-	it('exits with a code of 0', function() {
-		assert.strictEqual(global.cliCall.lastResult.code, 0);
+	it('exits with a code of 0', function(done) {
+		nixt()
+			.env('IMAGESET_SOURCE_DIRECTORY', 'is-a-directory')
+			.run(`${oist} verify`)
+			.code(0)
+			.end(done);
 	});
 
 });
 
 describe('oist verify --source-directory not-a-directory', function() {
-
-	before(function() {
-		return global.cliCall([
-			'verify',
-			'--source-directory', 'not-a-directory'
-		]);
-	});
-
-	it('exits with a code of 1', function() {
-		assert.strictEqual(global.cliCall.lastResult.code, 1);
+	it('exits with a code of 1', function(done) {
+		nixt()
+			.run(`${oist} verify --source-directory is-a-directory`)
+			.code(1)
+			.end(done);
 	});
 
 });
