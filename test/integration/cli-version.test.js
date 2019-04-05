@@ -1,21 +1,20 @@
 'use strict';
 
-const assert = require('proclaim');
-
+const nixt = require('nixt');
+const path = require('path');
+const oist = path.join(__dirname, '../../', require('../../package.json').bin.oist);
 describe('oist --version', function() {
-
-	before(function() {
-		return global.cliCall([
-			'--version'
-		]);
+	it('outputs a version number', function(done) {
+		nixt({ colors: false })
+			.run(`${oist} --version`).stdout('0.0.0')
+			.end(done);
 	});
 
-	it('outputs a version number', function() {
-		assert.strictEqual(global.cliCall.lastResult.output, '0.0.0');
-	});
-
-	it('exits with a code of 0', function() {
-		assert.strictEqual(global.cliCall.lastResult.code, 0);
+	it('exits with a code of 0', function(done) {
+		nixt({ colors: false })
+			.run(`${oist} --version`)
+			.code(0)
+			.end(done);
 	});
 
 });

@@ -24,7 +24,7 @@ program
 		const buildFunction = (options.legacy ? 'buildLegacyImageSetManifestFile' : 'buildImageSetManifestFile');
 		toolSet[buildFunction]().catch(error => {
 			toolSet.log.error(error.stack);
-			process.exit(1);
+			process.exitCode = 1;
 		});
 	});
 
@@ -48,7 +48,7 @@ program
 		});
 		toolSet.publishToS3(options.bucket).catch(error => {
 			toolSet.log.error(error.stack);
-			process.exit(1);
+			process.exitCode = 1;
 		});
 	});
 
@@ -69,7 +69,7 @@ program
 		});
 		toolSet.purgeFromImageService().catch(error => {
 			toolSet.log.error(error.stack);
-			process.exit(1);
+			process.exitCode = 1;
 		});
 	});
 
@@ -86,7 +86,7 @@ program
 		});
 		toolSet.verifyImages().catch(error => {
 			toolSet.log.error(error.stack);
-			process.exit(1);
+			process.exitCode = 1;
 		});
 	});
 
@@ -98,7 +98,7 @@ program
 		// eslint-disable-next-line no-console
 		console.error(`Command "${command}" not found`);
 		program.outputHelp();
-		process.exit(1);
+		process.exitCode = 1;
 	});
 
 program
