@@ -32,6 +32,9 @@ describe('lib/origami-image-set-tools', function () {
 
 		AWS = require('../mock/aws-sdk.mock');
 		mockery.registerMock('aws-sdk', AWS);
+		const error = new Error('not found');
+		error.code = 'NotFound';
+		AWS.S3.headObject.promise.rejects(error);
 
 		defaults = sinon.spy(require('lodash/defaults'));
 		mockery.registerMock('lodash/defaults', defaults);
