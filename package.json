@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.178.0",
-    "commander": "^2.11.0",
+    "commander": "^5.0.0",
     "file-exists": "^5.0.0",
     "fs-promise": "^2.0.3",
     "hasha": "^5.2.0",
