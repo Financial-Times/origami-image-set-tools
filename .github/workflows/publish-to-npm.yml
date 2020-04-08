@@ -12,8 +12,7 @@ jobs:
         node-version: '12.x'
         registry-url: 'https://registry.npmjs.org'
     - run: npm install
-    - run: echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ${HOME}/.npmrc
+    - run: npm version --git-tag-version=false ${{ github.ref }}
+    - run: npm publish --access=public
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    - run: npm version --git-tag-version=false ${CIRCLE_TAG}
-    - run: npm publish --access=public
