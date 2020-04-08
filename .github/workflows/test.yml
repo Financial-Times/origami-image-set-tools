@@ -9,3 +9,6 @@ jobs:
       with:
         node-version: 12.x
     - run: npm cit
+      env:
+        TEST_AWS_ACCESS_KEY: ${{ secrets.TEST_AWS_ACCESS_KEY }}
+        TEST_AWS_SECRET_KEY: ${{ secrets.TEST_AWS_SECRET_KEY }}
