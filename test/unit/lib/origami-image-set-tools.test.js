@@ -39,8 +39,8 @@ describe('lib/origami-image-set-tools', function () {
 		defaults = sinon.spy(require('lodash/defaults'));
 		mockery.registerMock('lodash/defaults', defaults);
 
-		fs = require('../mock/fs-promise.mock');
-		mockery.registerMock('fs-promise', fs);
+		fs = require('../mock/fs.mock');
+		mockery.registerMock('fs', fs);
 
 		fileExists = require('../mock/file-exists.mock');
 		mockery.registerMock('file-exists', fileExists);
@@ -183,7 +183,7 @@ describe('lib/origami-image-set-tools', function () {
 				beforeEach(function () {
 					hasha.fromFileSync.returns('a');
 
-					fs.readdir.resolves([
+					fs.promises.readdir.resolves([
 						'.hidden-1',
 						'image-1.jpg',
 						'image-2.png',
@@ -203,8 +203,8 @@ describe('lib/origami-image-set-tools', function () {
 				});
 
 				it('reads the configured source directory', function () {
-					assert.calledOnce(fs.readdir);
-					assert.calledWithExactly(fs.readdir, `${options.baseDirectory}/${options.sourceDirectory}`);
+					assert.calledOnce(fs.promises.readdir);
+					assert.calledWithExactly(fs.promises.readdir, `${options.baseDirectory}/${options.sourceDirectory}`);
 				});
 
 				it('resolves with an object that contains the image names', function () {
@@ -288,7 +288,7 @@ describe('lib/origami-image-set-tools', function () {
 
 						hasha.fromFileSync.returns('b');
 
-						fs.readdir.resolves([
+						fs.promises.readdir.resolves([
 							'.hidden-1',
 							'image-1.jpg',
 							'image-2.png',
@@ -433,8 +433,8 @@ describe('lib/origami-image-set-tools', function () {
 				});
 
 				it('saves the image set manifest to a file as JSON', function () {
-					assert.calledOnce(fs.writeFile);
-					assert.calledWithExactly(fs.writeFile, `${options.baseDirectory}/imageset.json`, JSON.stringify(imageSetManifest, null, '\t'));
+					assert.calledOnce(fs.promises.writeFile);
+					assert.calledWithExactly(fs.promises.writeFile, `${options.baseDirectory}/imageset.json`, JSON.stringify(imageSetManifest, null, '\t'));
 				});
 
 				it('logs that the manifest file has been saved', function () {
@@ -507,8 +507,8 @@ describe('lib/origami-image-set-tools', function () {
 				});
 
 				it('saves the image set manifest to a file as JSON', function () {
-					assert.calledOnce(fs.writeFile);
-					assert.calledWithExactly(fs.writeFile, `${options.baseDirectory}/imageList.json`, JSON.stringify(imageSetManifest, null, '\t'));
+					assert.calledOnce(fs.promises.writeFile);
+					assert.calledWithExactly(fs.promises.writeFile, `${options.baseDirectory}/imageList.json`, JSON.stringify(imageSetManifest, null, '\t'));
 				});
 
 				it('logs that the manifest file has been saved', function () {
@@ -1006,7 +1006,7 @@ describe('lib/origami-image-set-tools', function () {
 							fileExists.withArgs(`${options.baseDirectory}/imageset.json`).resolves(true);
 							fileExists.withArgs(`${options.baseDirectory}/imageList.json`).resolves(false);
 
-							fs.readFile.withArgs(`${options.baseDirectory}/imageset.json`, 'utf8').resolves('{"hello": "world"}');
+							fs.promises.readFile.withArgs(`${options.baseDirectory}/imageset.json`, 'utf8').resolves('{"hello": "world"}');
 							return instance.readImageSetManifest().then(result => {
 								assert.deepStrictEqual(result, {
 									hello: 'world'
@@ -1018,7 +1018,7 @@ describe('lib/origami-image-set-tools', function () {
 						it('throws an error', function () {
 							fileExists.withArgs(`${options.baseDirectory}/imageset.json`).resolves(true);
 							fileExists.withArgs(`${options.baseDirectory}/imageList.json`).resolves(false);
-							fs.readFile.withArgs(`${options.baseDirectory}/imageset.json`, 'utf8').resolves('qwertyuiop');
+							fs.promises.readFile.withArgs(`${options.baseDirectory}/imageset.json`, 'utf8').resolves('qwertyuiop');
 							return instance.readImageSetManifest().catch(error => {
 								assert.instanceOf(error, Error);
 							});
@@ -1030,7 +1030,7 @@ describe('lib/origami-image-set-tools', function () {
 						it('parses and returns the JSON string', function () {
 							fileExists.withArgs(`${options.baseDirectory}/imageset.json`).resolves(false);
 							fileExists.withArgs(`${options.baseDirectory}/imageList.json`).resolves(true);
-							fs.readFile.withArgs(`${options.baseDirectory}/imageList.json`, 'utf8').resolves('{"hello": "world"}');
+							fs.promises.readFile.withArgs(`${options.baseDirectory}/imageList.json`, 'utf8').resolves('{"hello": "world"}');
 							return instance.readImageSetManifest().then(result => {
 								assert.deepStrictEqual(result, {
 									hello: 'world'
@@ -1042,7 +1042,7 @@ describe('lib/origami-image-set-tools', function () {
 						it('throws an error', function () {
 							fileExists.withArgs(`${options.baseDirectory}/imageset.json`).resolves(false);
 							fileExists.withArgs(`${options.baseDirectory}/imageList.json`).resolves(true);
-							fs.readFile.withArgs(`${options.baseDirectory}/imageList.json`, 'utf8').resolves('qwertyuiop');
+							fs.promises.readFile.withArgs(`${options.baseDirectory}/imageList.json`, 'utf8').resolves('qwertyuiop');
 							return instance.readImageSetManifest().catch(error => {
 								assert.instanceOf(error, Error);
 							});
@@ -1054,8 +1054,8 @@ describe('lib/origami-image-set-tools', function () {
 						it('parses and returns the JSON string for the new manifest file', function () {
 							fileExists.withArgs(`${options.baseDirectory}/imageset.json`).resolves(true);
 							fileExists.withArgs(`${options.baseDirectory}/imageList.json`).resolves(true);
-							fs.readFile.withArgs(`${options.baseDirectory}/imageset.json`, 'utf8').resolves('{"hello": "world"}');
-							fs.readFile.withArgs(`${options.baseDirectory}/imageList.json`, 'utf8').resolves('{"goodbye": "world"}');
+							fs.promises.readFile.withArgs(`${options.baseDirectory}/imageset.json`, 'utf8').resolves('{"hello": "world"}');
+							fs.promises.readFile.withArgs(`${options.baseDirectory}/imageList.json`, 'utf8').resolves('{"goodbye": "world"}');
 							return instance.readImageSetManifest().then(result => {
 								assert.deepStrictEqual(result, {
 									hello: 'world'
@@ -1067,8 +1067,8 @@ describe('lib/origami-image-set-tools', function () {
 						it('throws an error', function () {
 							fileExists.withArgs(`${options.baseDirectory}/imageset.json`).resolves(true);
 							fileExists.withArgs(`${options.baseDirectory}/imageList.json`).resolves(true);
-							fs.readFile.withArgs(`${options.baseDirectory}/imageset.json`, 'utf8').resolves('qwertyuiop');
-							fs.readFile.withArgs(`${options.baseDirectory}/imageList.json`, 'utf8').resolves('asdfghjkl');
+							fs.promises.readFile.withArgs(`${options.baseDirectory}/imageset.json`, 'utf8').resolves('qwertyuiop');
+							fs.promises.readFile.withArgs(`${options.baseDirectory}/imageList.json`, 'utf8').resolves('asdfghjkl');
 							return instance.readImageSetManifest().catch(error => {
 								assert.instanceOf(error, Error);
 							});
@@ -1146,7 +1146,7 @@ describe('lib/origami-image-set-tools', function () {
 					};
 					instance.buildImageSetManifest = sinon.stub().resolves(imageSetManifest);
 
-					fs.readFile.resolves('mock-svg-content');
+					fs.promises.readFile.resolves('mock-svg-content');
 
 					return returnedPromise = instance.verifySvgImages().then(value => {
 						resolvedValue = value;
@@ -1163,9 +1163,9 @@ describe('lib/origami-image-set-tools', function () {
 				});
 
 				it('reads each SVG image', function () {
-					assert.calledTwice(fs.readFile);
-					assert.calledWithExactly(fs.readFile, path.resolve(options.baseDirectory, 'src/bar-image.svg'), 'utf-8');
-					assert.calledWithExactly(fs.readFile, path.resolve(options.baseDirectory, 'src/baz-image.svg'), 'utf-8');
+					assert.calledTwice(fs.promises.readFile);
+					assert.calledWithExactly(fs.promises.readFile, path.resolve(options.baseDirectory, 'src/bar-image.svg'), 'utf-8');
+					assert.calledWithExactly(fs.promises.readFile, path.resolve(options.baseDirectory, 'src/baz-image.svg'), 'utf-8');
 				});
 
 				it('logs that each image has been verified', function () {
