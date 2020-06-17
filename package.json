@@ -35,7 +35,6 @@
     "aws-sdk": "^2.178.0",
     "commander": "^2.11.0",
     "file-exists": "^5.0.0",
-    "fs-promise": "^2.0.3",
     "hasha": "^5.2.0",
     "libxmljs": "^0.19.5",
     "lodash": "^4.17.5",
