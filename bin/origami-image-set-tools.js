@@ -94,7 +94,7 @@ program
 program
 	.on('command:*', function (operands) {
 		// eslint-disable-next-line no-console
-		console.error(`Command "${operands[0]}" not found`);;
+		console.error(`Command "${operands[0]}" not found`);
 		program.outputHelp();
 		process.exitCode = 1;
 	});
