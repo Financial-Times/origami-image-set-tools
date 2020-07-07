@@ -17,7 +17,7 @@ describe('lib/origami-image-set-tools', function () {
 	let hasha;
 	let log;
 	let mime;
-	let request;
+	let axios;
 	let OrigamiImageSetTools;
 	let semver;
 	let semvish;
@@ -53,8 +53,8 @@ describe('lib/origami-image-set-tools', function () {
 		mime = require('../mock/mime-types.mock');
 		mockery.registerMock('mime-types', mime);
 
-		request = require('../mock/request-promise-native.mock');
-		mockery.registerMock('request-promise-native', request);
+		axios = require('../mock/axios.mock');
+		mockery.registerMock('axios', axios);
 
 		semver = require('../mock/semver.mock');
 		mockery.registerMock('semver', semver);
@@ -885,39 +885,39 @@ describe('lib/origami-image-set-tools', function () {
 				});
 
 				it('creates two purge requests for each image, with and without an extension', function () {
-					assert.callCount(request.get, 6);
-					assert.calledWith(request.get, {
-						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:foo-image?source=oist',
+					assert.callCount(axios.get, 6);
+					assert.calledWith(axios.get, {
+						url: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:foo-image?source=oist',
 						headers: {
 							'ft-origami-api-key': options.imageServiceApiKey
 						}
 					});
-					assert.calledWith(request.get, {
-						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:foo-image.png?source=oist',
+					assert.calledWith(axios.get, {
+						url: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:foo-image.png?source=oist',
 						headers: {
 							'ft-origami-api-key': options.imageServiceApiKey
 						}
 					});
-					assert.calledWith(request.get, {
-						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:bar-image?source=oist',
+					assert.calledWith(axios.get, {
+						url: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:bar-image?source=oist',
 						headers: {
 							'ft-origami-api-key': options.imageServiceApiKey
 						}
 					});
-					assert.calledWith(request.get, {
-						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:bar-image.jpg?source=oist',
+					assert.calledWith(axios.get, {
+						url: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:bar-image.jpg?source=oist',
 						headers: {
 							'ft-origami-api-key': options.imageServiceApiKey
 						}
 					});
-					assert.calledWith(request.get, {
-						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:baz-image?source=oist',
+					assert.calledWith(axios.get, {
+						url: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:baz-image?source=oist',
 						headers: {
 							'ft-origami-api-key': options.imageServiceApiKey
 						}
 					});
-					assert.calledWith(request.get, {
-						uri: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:baz-image.svg?source=oist',
+					assert.calledWith(axios.get, {
+						url: options.imageServiceUrl + '/v2/images/purge/' + 'mock-scheme-v9:baz-image.svg?source=oist',
 						headers: {
 							'ft-origami-api-key': options.imageServiceApiKey
 						}
@@ -964,7 +964,7 @@ describe('lib/origami-image-set-tools', function () {
 						log.info.reset();
 						imageSetManifest.images = [imageSetManifest[0]];
 						purgeError = new Error('rejected');
-						request.get.rejects(purgeError);
+						axios.get.rejects(purgeError);
 						return returnedPromise = instance.purgeFromImageService().catch(error => {
 							rejectedError = error;
 						});
@@ -976,7 +976,7 @@ describe('lib/origami-image-set-tools', function () {
 					});
 
 					it('logs that the image file could not be published', function () {
-						assert.calledWithExactly(log.error, '✘ Could not schedule purge of "mock-scheme-v9:foo-image" "mock-scheme-v9:foo-image.png" from "mock-image-service-url" using {"uri":"mock-image-service-url/v2/images/purge/mock-scheme-v9:foo-image?source=oist","headers":{"ft-origami-api-key":"mock-image-service-api-key"}}');
+						assert.calledWithExactly(log.error, '✘ Could not schedule purge of "mock-scheme-v9:foo-image" "mock-scheme-v9:foo-image.png" from "mock-image-service-url" using {"url":"mock-image-service-url/v2/images/purge/mock-scheme-v9:foo-image?source=oist","headers":{"ft-origami-api-key":"mock-image-service-api-key"}}');
 					});
 
 					it('rejects with the error', function () {
