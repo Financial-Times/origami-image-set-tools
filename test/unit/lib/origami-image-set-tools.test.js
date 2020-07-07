@@ -11,7 +11,6 @@ sinon.assert.expose(assert, {
 
 describe('lib/origami-image-set-tools', function () {
 	let AWS;
-	let defaults;
 	let fs;
 	let fileExists;
 	let hasha;
@@ -35,9 +34,6 @@ describe('lib/origami-image-set-tools', function () {
 		const error = new Error('not found');
 		error.code = 'NotFound';
 		AWS.S3.headObject.promise.rejects(error);
-
-		defaults = sinon.spy(require('lodash/defaults'));
-		mockery.registerMock('lodash/defaults', defaults);
 
 		fs = require('../mock/fs.mock');
 		mockery.registerMock('fs', fs);
@@ -144,9 +140,7 @@ describe('lib/origami-image-set-tools', function () {
 		});
 
 		it('defaults the passed in options', function () {
-			assert.isObject(defaults.firstCall.args[0]);
-			assert.strictEqual(defaults.firstCall.args[1], options);
-			assert.strictEqual(defaults.firstCall.args[2], OrigamiImageSetTools.defaults);
+			assert.deepStrictEqual(new OrigamiImageSetTools().options, OrigamiImageSetTools.defaults);
 		});
 
 		it('cleans the passed in version', function () {
@@ -157,7 +151,7 @@ describe('lib/origami-image-set-tools', function () {
 		describe('instance', function () {
 
 			it('has an `options` property set to the defaulted `options`', function () {
-				assert.strictEqual(instance.options, defaults.firstCall.returnValue);
+				assert.deepStrictEqual(instance.options, options);
 			});
 
 			it('has a `log` property set to `options.log`', function () {

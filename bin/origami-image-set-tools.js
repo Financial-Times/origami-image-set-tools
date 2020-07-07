@@ -15,12 +15,11 @@ program
 	.option('-l, --legacy', 'Whether to output the legacy manifest format')
 	.description('build an image set manifest file and save to "imageset.json"')
 	.action(options => {
-		const toolSet = new OrigamiImageSetTools({
-			scheme: options.scheme,
-			sourceDirectory: options.sourceDirectory,
-			version: options.schemeVersion,
-			host: options.host
-		});
+		if (options.schemeVersion) {
+			options.version = options.schemeVersion;
+			delete options.schemeVersion;
+		}
+		const toolSet = new OrigamiImageSetTools(options);
 		const buildFunction = (options.legacy ? 'buildLegacyImageSetManifestFile' : 'buildImageSetManifestFile');
 		toolSet[buildFunction]().catch(error => {
 			toolSet.log.error(error.stack);
@@ -39,13 +38,11 @@ program
 	.option('-v, --scheme-version <version>', 'The version to publish this image set under', process.env.IMAGESET_VERSION)
 	.description('publish the image set to an S3 bucket for use by the Image Service')
 	.action(options => {
-		const toolSet = new OrigamiImageSetTools({
-			awsAccessKey: options.awsAccessKey,
-			awsSecretKey: options.awsSecretKey,
-			scheme: options.scheme,
-			sourceDirectory: options.sourceDirectory,
-			version: options.schemeVersion
-		});
+		if (options.schemeVersion) {
+			options.version = options.schemeVersion;
+			delete options.schemeVersion;
+		}
+		const toolSet = new OrigamiImageSetTools(options);
 		toolSet.publishToS3(options.bucket).catch(error => {
 			toolSet.log.error(error.stack);
 			process.exitCode = 1;
@@ -61,12 +58,11 @@ program
 	.option('--image-service-api-key <key>', 'The API key used to communicate with the Origami Image Service', process.env.IMAGE_SERVICE_API_KEY)
 	.description('request each image in the image set to be purged from the Origami Image Service')
 	.action(options => {
-		const toolSet = new OrigamiImageSetTools({
-			scheme: options.scheme,
-			sourceDirectory: options.sourceDirectory,
-			imageServiceApiKey: options.imageServiceApiKey,
-			version: options.schemeVersion
-		});
+		if (options.schemeVersion) {
+			options.version = options.schemeVersion;
+			delete options.schemeVersion;
+		}
+		const toolSet = new OrigamiImageSetTools(options);
 		toolSet.purgeFromImageService().catch(error => {
 			toolSet.log.error(error.stack);
 			process.exitCode = 1;
@@ -80,16 +76,13 @@ program
 	.option('-c, --scheme <scheme>', 'The custom scheme to publish this image set under', process.env.IMAGESET_SCHEME)
 	.description('verify that images in the source directory are valid and have no issues')
 	.action(options => {
-		const toolSet = new OrigamiImageSetTools({
-			scheme: options.scheme,
-			sourceDirectory: options.sourceDirectory
-		});
+		const toolSet = new OrigamiImageSetTools(options);
 		toolSet.verifyImages().catch(error => {
 			toolSet.log.error(error.stack);
 			process.exitCode = 1;
 		});
 	});
-
+	
 // Output help for all unrecognised commands
 program
 	.on('command:*', function (operands) {
@@ -99,10 +92,12 @@ program
 		process.exitCode = 1;
 	});
 
+const noCommandSpecified = !process.argv.slice(2).length;
+
+if (noCommandSpecified) {
+	program.help();
+}
+
 program
 	.version(pkg.version)
 	.parse(process.argv);
-
-if (!process.argv.slice(2).length) {
-	program.outputHelp();
-}
