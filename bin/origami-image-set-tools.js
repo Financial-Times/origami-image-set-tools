@@ -92,11 +92,9 @@ program
 
 // Output help for all unrecognised commands
 program
-	.command('*')
-	.description('unrecognised commands will output this help page')
-	.action(command => {
+	.on('command:*', function (operands) {
 		// eslint-disable-next-line no-console
-		console.error(`Command "${command[0]}" not found`);
+		console.error(`Command "${operands[0]}" not found`);;
 		program.outputHelp();
 		process.exitCode = 1;
 	});
