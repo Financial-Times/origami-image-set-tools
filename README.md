@@ -5,7 +5,6 @@ Origami Image Set Tools
 Tools for managing and uploading Origami image sets.
 
 [![NPM version](https://img.shields.io/npm/v/@financial-times/origami-image-set-tools.svg)](https://www.npmjs.com/package/@financial-times/origami-image-set-tools)
-[![Build status](https://img.shields.io/circleci/project/Financial-Times/origami-image-set-tools.svg)](https://circleci.com/gh/Financial-Times/origami-image-set-tools)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)][license]
 
 
