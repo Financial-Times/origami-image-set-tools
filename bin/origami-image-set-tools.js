@@ -90,11 +90,12 @@ program
 		});
 	});
 
+
 // Output help for all unrecognised commands
 program
 	.command('*')
 	.description('unrecognised commands will output this help page')
-	.action(command => {
+	.action((_, [command]) => {
 		// eslint-disable-next-line no-console
 		console.error(`Command "${command}" not found`);
 		program.outputHelp();
