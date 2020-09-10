@@ -90,22 +90,17 @@ program
 		});
 	});
 
-
 // Output help for all unrecognised commands
 program
-	.command('*')
+	.command('*', {isDefault: true})
 	.description('unrecognised commands will output this help page')
-	.action((_, [command]) => {
-		// eslint-disable-next-line no-console
-		console.error(`Command "${command}" not found`);
-		program.outputHelp();
-		process.exitCode = 1;
+	.action(({args})=> {
+		if (args.length) {
+			console.error(`Command "${args[0]}" not found`);
+			process.exitCode = 1;
+		}
+		program.help();
 	});
 
-program
-	.version(pkg.version)
-	.parse(process.argv);
-
-if (!process.argv.slice(2).length) {
-	program.outputHelp();
-}
+program.version(pkg.version);
+program.parse(process.argv);
