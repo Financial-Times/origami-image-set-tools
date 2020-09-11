@@ -450,7 +450,7 @@ describe('lib/origami-image-set-tools', function () {
 					let rejectedError;
 
 					beforeEach(function () {
-						log.info.reset();
+						log.info.resetHistory();
 						buildError = new Error('rejected');
 						instance.buildImageSetManifest = sinon.stub().rejects(buildError);
 						return returnedPromise = instance.buildImageSetManifestFile().catch(error => {
@@ -524,7 +524,7 @@ describe('lib/origami-image-set-tools', function () {
 					let rejectedError;
 
 					beforeEach(function () {
-						log.info.reset();
+						log.info.resetHistory();
 						buildError = new Error('rejected');
 						instance.buildLegacyImageSetManifest = sinon.stub().rejects(buildError);
 						return returnedPromise = instance.buildLegacyImageSetManifestFile().catch(error => {
@@ -781,7 +781,7 @@ describe('lib/origami-image-set-tools', function () {
 					let rejectedError;
 
 					beforeEach(function () {
-						log.info.reset();
+						log.info.resetHistory();
 						delete options.awsAccessKey;
 						instance = new OrigamiImageSetTools(options);
 						return returnedPromise = instance.publishToS3('mock-bucket').catch(error => {
@@ -801,7 +801,7 @@ describe('lib/origami-image-set-tools', function () {
 					let rejectedError;
 
 					beforeEach(function () {
-						log.info.reset();
+						log.info.resetHistory();
 						imageSetManifest.images = [imageSetManifest.images[0]];
 						publishError = new Error('rejected');
 						AWS.S3.mockUpload.promise = sinon.stub().rejects(publishError);
@@ -941,7 +941,7 @@ describe('lib/origami-image-set-tools', function () {
 					let rejectedError;
 
 					beforeEach(function () {
-						log.info.reset();
+						log.info.resetHistory();
 						delete options.imageServiceApiKey;
 						instance = new OrigamiImageSetTools(options);
 						return returnedPromise = instance.purgeFromImageService().catch(error => {
@@ -961,7 +961,7 @@ describe('lib/origami-image-set-tools', function () {
 					let rejectedError;
 
 					beforeEach(function () {
-						log.info.reset();
+						log.info.resetHistory();
 						imageSetManifest.images = [imageSetManifest[0]];
 						purgeError = new Error('rejected');
 						request.get.rejects(purgeError);
@@ -1181,7 +1181,7 @@ describe('lib/origami-image-set-tools', function () {
 					let rejectedError;
 
 					beforeEach(function () {
-						log.info.reset();
+						log.info.resetHistory();
 						xml.mockRootNode.attr.withArgs('width').returns({});
 						return returnedPromise = instance.verifySvgImages().catch(error => {
 							rejectedError = error;
@@ -1207,7 +1207,7 @@ describe('lib/origami-image-set-tools', function () {
 					let rejectedError;
 
 					beforeEach(function () {
-						log.info.reset();
+						log.info.resetHistory();
 						xml.mockRootNode.attr.withArgs('height').returns({});
 						return returnedPromise = instance.verifySvgImages().catch(error => {
 							rejectedError = error;
@@ -1234,7 +1234,7 @@ describe('lib/origami-image-set-tools', function () {
 					let rejectedError;
 
 					beforeEach(function () {
-						log.info.reset();
+						log.info.resetHistory();
 						parseError = new Error('parse error');
 						xml.parseXml.throws(parseError);
 						return returnedPromise = instance.verifySvgImages().catch(error => {
