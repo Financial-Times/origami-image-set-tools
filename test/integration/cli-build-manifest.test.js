@@ -65,6 +65,54 @@ describe('oist build-manifest', function() {
 				}
 			});
 	});
+
+	it('does not modify the manifest deprecated image property on an already existing manifest file', function(done) {
+		const manifestPath = path.join(testDirectory, 'imageset.json');
+		const manifestContents = {
+			sourceDirectory: 'src',
+			scheme: 'noscheme',
+			images: [
+				{
+					name: 'example',
+					extension: 'png',
+					path: 'src/example.png',
+					hash: '923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda',
+					url: 'https://www.ft.com/noscheme/v0/example-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda',
+					deprecated: 'This image is deprecated because it is only an example image.'
+				}
+			]
+		};
+		fs.writeFileSync(manifestPath, JSON.stringify(manifestContents), 'utf-8');
+
+		nixt({ colors: false }).cwd(testDirectory)
+			.run(`${oist} build-manifest`)
+			.end(function(err) {
+				const manifestPath = path.join(testDirectory, 'imageset.json');
+				const manifestContents = fs.readFileSync(manifestPath);
+				let manifestJson;
+				assert.doesNotThrow(() => manifestJson = JSON.parse(manifestContents));
+				assert.deepEqual(manifestJson, {
+					sourceDirectory: 'src',
+					scheme: 'noscheme',
+					images: [
+						{
+							name: 'example',
+							extension: 'png',
+							path: 'src/example.png',
+							previousHash: '923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda',
+							hash: '923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda',
+							url: 'https://www.ft.com/noscheme/v0/example-923d4b188453ddd83f5cc175a445805db10f129ba5fcb509a67369a3165c538604a00a0fc1b8cc4afc929c71a6be204128d398eeac24fdb395769db92a43adda',
+							deprecated: 'This image is deprecated because it is only an example image.'
+						}
+					]
+				});
+				if (err) {
+					done(err);
+				} else {
+					done();
+				}
+			});
+	});
 });
 
 describe('oist build-manifest --source-directory is-a-directory', function() {

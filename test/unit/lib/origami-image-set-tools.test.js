@@ -260,14 +260,16 @@ describe('lib/origami-image-set-tools', function () {
 								extension: 'jpg',
 								path: `${options.sourceDirectory}/image-1.jpg`,
 								hash: 'a',
-								previousHash: undefined
+								previousHash: undefined,
+								deprecated: ''
 							},
 							{
 								name: 'image-2',
 								extension: 'png',
 								path: `${options.sourceDirectory}/image-2.png`,
 								hash: 'a',
-								previousHash: undefined
+								previousHash: undefined,
+								deprecated: 'old image'
 							},
 							{
 								name: 'image-3',
@@ -313,7 +315,8 @@ describe('lib/origami-image-set-tools', function () {
 								path: `${options.sourceDirectory}/image-1.jpg`,
 								hash: 'b',
 								previousHash: 'a',
-								'url': 'https://origami.ft.com/mock-scheme/vundefined/image-1-b'
+								'url': 'https://origami.ft.com/mock-scheme/vundefined/image-1-b',
+								deprecated: ''
 							},
 							{
 								name: 'image-2',
@@ -321,7 +324,8 @@ describe('lib/origami-image-set-tools', function () {
 								path: `${options.sourceDirectory}/image-2.png`,
 								hash: 'b',
 								previousHash: 'a',
-								'url': 'https://origami.ft.com/mock-scheme/vundefined/image-2-b'
+								'url': 'https://origami.ft.com/mock-scheme/vundefined/image-2-b',
+								deprecated: 'old image'
 							},
 							{
 								name: 'image-3',
