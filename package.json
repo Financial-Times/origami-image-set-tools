@@ -20,13 +20,13 @@
   },
   "main": "./lib/origami-image-set-tools.js",
   "bin": {
-    "oist": "./bin/origami-image-set-tools.js",
-    "origami-image-set-tools": "./bin/origami-image-set-tools.js"
+    "oist": "bin/origami-image-set-tools.js",
+    "origami-image-set-tools": "bin/origami-image-set-tools.js"
   },
   "scripts": {
     "test": "npm run test:lint && npm run test:unit && npm run test:integration",
     "test:lint": "eslint .",
-    "test:integration": "mocha test/integration/**/*.test.js --recursive",
+    "test:integration": "mocha test/integration/**/*.test.js --recursive --require=dotenv/config",
     "test:unit": "nyc mocha test/unit/**/*.test.js --recursive",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
@@ -46,6 +46,7 @@
     "snyk": "^1.316.2"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "eslint": "^7.0.0",
     "eslint-plugin-mocha": "^8.0.0",
     "mocha": "^8.0.1",
