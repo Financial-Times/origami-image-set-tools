@@ -3,12 +3,16 @@ on: [pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2.1.2
       with:
-        node-version: 12.x
+        node-version: ${{ matrix.node-version }}
     - run: npm cit
       env:
         TEST_AWS_ACCESS_KEY: ${{ secrets.TEST_AWS_ACCESS_KEY }}
         TEST_AWS_SECRET_KEY: ${{ secrets.TEST_AWS_SECRET_KEY }}
+    
