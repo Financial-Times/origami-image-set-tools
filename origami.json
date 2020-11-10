@@ -1,6 +1,6 @@
 {
 	"description": "Tools for managing and uploading Origami image sets.",
-	"origamiType": null,
+	"origamiType": "cli",
 	"origamiVersion": 1,
 	"keywords": [
 		"origami"
