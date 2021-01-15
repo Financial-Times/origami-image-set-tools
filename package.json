@@ -32,7 +32,7 @@
     "prepare": "npm run snyk-protect"
   },
   "dependencies": {
-    "aws-sdk": "^2.178.0",
+    "aws-sdk": "^2.814.0",
     "commander": "^6.1.0",
     "file-exists": "^5.0.0",
     "hasha": "^5.2.0",
