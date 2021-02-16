@@ -33,30 +33,30 @@
   },
   "dependencies": {
     "aws-sdk": "^2.814.0",
-    "commander": "^6.1.0",
+    "commander": "^6.2.1",
     "file-exists": "^5.0.0",
-    "hasha": "^5.2.0",
+    "hasha": "^5.2.2",
     "libxmljs": "^0.19.5",
     "lodash": "^4.17.20",
-    "mime-types": "^2.1.17",
+    "mime-types": "^2.1.28",
     "request": "^2.84.0",
     "request-promise-native": "^1.0.5",
-    "semver": "^7.1.3",
+    "semver": "^7.3.4",
     "semvish": "^1.1.0",
     "snyk": "^1.425.4"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
-    "eslint": "^7.0.0",
+    "eslint": "^7.20.0",
     "eslint-plugin-mocha": "^8.0.0",
-    "mocha": "^8.0.1",
+    "mocha": "^8.3.0",
     "mockery": "^2.1.0",
     "nixt": "^0.5.1",
     "npm-prepublish": "^1.2.3",
     "nyc": "^15.0.0",
     "proclaim": "^3.6.0",
     "rimraf": "^3.0.2",
-    "sinon": "^9.0.3"
+    "sinon": "^9.2.4"
   },
   "snyk": true
 }
