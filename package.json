@@ -37,7 +37,7 @@
     "file-exists": "^5.0.0",
     "hasha": "^5.2.2",
     "libxmljs": "^0.19.5",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "mime-types": "^2.1.28",
     "request": "^2.84.0",
     "request-promise-native": "^1.0.5",
