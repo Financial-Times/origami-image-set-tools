@@ -46,7 +46,7 @@
     "snyk": "^1.465.0"
   },
   "devDependencies": {
-    "dotenv": "^8.2.0",
+    "dotenv": "^9.0.0",
     "eslint": "^7.20.0",
     "eslint-plugin-mocha": "^8.0.0",
     "mocha": "^8.3.0",
