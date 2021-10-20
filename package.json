@@ -43,7 +43,7 @@
     "request-promise-native": "^1.0.5",
     "semver": "^7.3.4",
     "semvish": "^1.1.0",
-    "snyk": "^1.465.0"
+    "snyk": "^1.685.0"
   },
   "devDependencies": {
     "dotenv": "^9.0.0",
