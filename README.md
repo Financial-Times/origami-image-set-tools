@@ -2,6 +2,8 @@
 Origami Image Set Tools
 =======================
 
+**No Longer used - ImageSets now live within the [Origami Image Service](Now that the image-set lives within the origami-image-service (Financial-Times/origami-image-service#763) - we no longer need this tool at all)**
+
 Tools for managing and uploading Origami image sets.
 
 [![NPM version](https://img.shields.io/npm/v/@financial-times/origami-image-set-tools.svg)](https://www.npmjs.com/package/@financial-times/origami-image-set-tools)
